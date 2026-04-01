@@ -468,53 +468,45 @@
             }
         }
 
-        // 고화질 이미지 캡처
+        // 고화질 이미지 캡처 (복제 방식 적용)
         function saveImage() {
             try {
-                const element = document.getElementById('invite-card');
-                document.getElementById('editor').blur(); // 커서 및 선택 해제를 blur()로 처리
-                
-                // 캡처 전 애니메이션 및 3D 회전 효과 초기화
-                const wrapper = document.getElementById('card-wrapper');
-                wrapper.style.animation = 'none';
-                wrapper.style.transform = 'translateY(0)';
-                element.style.transform = 'rotateX(0deg) rotateY(0deg)'; 
-                element.style.transition = 'none'; // 전환 효과 끄기
+                const original = document.getElementById('invite-card');
 
-                // html2canvas가 CSS 변수를 잘 읽지 못하는 문제를 해결하기 위해
-                // 현재 테마의 실제 계산된 글씨 색상을 가져와서 명시적으로 설정합니다.
-                const computedStyle = window.getComputedStyle(document.body);
-                const currentTextColor = computedStyle.getPropertyValue('--text-main').trim();
+                // 👉 카드 복제
+                const clone = original.cloneNode(true);
 
-                // 이름은 changeTheme에서 이미 하드코딩된 색상을 사용하므로 제외하고,
-                // 나머지 텍스트 요소들의 색상을 명시적으로 오버라이드합니다.
-                const textsToOverride = element.querySelectorAll('.invite-intro, .invite-datetime, .invite-location, .invite-outro');
-                textsToOverride.forEach(el => {
-                    el.style.color = currentTextColor;
-                });
+                // 👉 contenteditable 제거 (핵심)
+                const editor = clone.querySelector('#editor');
+                editor.removeAttribute('contenteditable');
 
-                // 잠시 대기 후 캡처 (렌더링 안정화)
+                // 👉 화면 밖에 숨김
+                clone.style.position = 'fixed';
+                clone.style.top = '-9999px';
+                clone.style.left = '-9999px';
+
+                document.body.appendChild(clone);
+
+                // 👉 애니메이션 제거
+                clone.style.transform = 'none';
+
                 setTimeout(() => {
-                    html2canvas(element, { 
-                        scale: 3, // 고화질 저장
-                        backgroundColor: null, // 요소의 CSS 배경을 그대로 사용
+                    html2canvas(clone, {
+                        scale: 3,
+                        backgroundColor: null,
                         useCORS: true
                     }).then(canvas => {
-                        // 저장 완료 후 명시적으로 설정했던 색상 스타일을 다시 제거하여 동적 테마 유지
-                        textsToOverride.forEach(el => {
-                            el.style.color = '';
-                        });
 
                         const link = document.createElement('a');
                         link.download = 'luxury_wedding_invitation.png';
                         link.href = canvas.toDataURL('image/png');
                         link.click();
-                        
-                        // 원상 복구
-                        wrapper.style.animation = 'floatCard 8s ease-in-out infinite';
-                        element.style.transition = 'transform 0.1s ease-out, background 0.8s ease, box-shadow 0.8s ease';
+
+                        // 👉 복제 제거
+                        clone.remove();
                     });
                 }, 100);
+
             } catch (error) {
                 alert('이미지 저장 중 문제가 발생했습니다.');
             }
