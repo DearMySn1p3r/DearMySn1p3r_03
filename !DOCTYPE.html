@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초호화 모던 미니멀 청첩장 에디터</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&family=Nanum+Myeongjo:wght@400;700&family=Noto+Serif+KR:wght@300;400;700&family=Gowun+Batang&family=Pinyon+Script&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* 🎨 테마별 CSS 변수 */
+        :root {
+            /* 🤍 클래식 웨딩 테마 (아이보리 & 샴페인 골드) */
+            --body-bg: #f5f3ef;
+            --card-bg: radial-gradient(circle at center, #ffffff 0%, #fdfbf7 100%);
+            --text-main: #4a433b;
+            --text-muted: #888888;
+            --line-color: #e6d5a7;
+            --accent: #bba58e; 
+            --petal-color: #ffffff;
+            --card-shadow: rgba(187, 165, 142, 0.15);
+        }
+
+        .theme-blossom {
+            /* 🌸 벚꽃 감성 테마 */
+            --body-bg: #fcf5f7;
+            --card-bg: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
+            --text-main: #5a3c43;
+            --text-muted: #a88d92;
+            --line-color: #f0b9c5;
+            --accent: #dcaeb6;
+            --petal-color: #ffb6c1;
+            --card-shadow: rgba(220, 174, 182, 0.2);
+        }
+
+        .theme-night {
+            /* 🌙 야간 고급 테마 */
+            --body-bg: #0d1117;
+            --card-bg: radial-gradient(circle at center, #1c212b 0%, #0d1117 100%);
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --line-color: #4a5668;
+            --accent: #a4b5d0;
+            --petal-color: #a4b5d0;
+            --card-shadow: rgba(0, 0, 0, 0.6);
+        }
+
+        body {
+            background: var(--body-bg);
+            color: var(--text-main);
+            font-family: 'Noto Sans KR', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background 0.8s ease;
+        }
+
+        /* 🌸 배경 흩날리는 효과 */
+        .petal {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--petal-color);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--petal-color);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            filter: blur(1px);
+        }
+
+        /* 3D 원근감을 위한 래퍼 */
+        .card-perspective-wrapper {
+            perspective: 1200px;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        /* 둥둥 떠다니는 애니메이션 */
+        .card-wrapper {
+            animation: floatCard 8s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes floatCard {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* 💌 메인 청첩장 카드 */
+        .holy-card {
+            position: relative;
+            width: 650px;
+            height: 650px;
+            background: var(--card-bg);
+            box-shadow: 0 20px 50px var(--card-shadow);
+            padding: 60px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 2px;
+            transition: transform 0.1s ease-out, background 0.8s ease, box-shadow 0.8s ease;
+            transform-style: preserve-3d;
+        }
+
+        /* ⚜️ 얇은 선 프레임 */
+        .holy-card::before {
+            content: "";
+            position: absolute;
+            top: 20px; left: 20px; right: 20px; bottom: 20px;
+            border: 1px solid var(--line-color);
+            pointer-events: none;
+            transition: border-color 0.8s ease;
+        }
+        .holy-card::after {
+            content: "";
+            position: absolute;
+            top: 28px; left: 28px; right: 28px; bottom: 28px;
+            border: 1px dashed var(--line-color);
+            opacity: 0.5;
+            pointer-events: none;
+            transition: border-color 0.8s ease;
+        }
+
+        /* SVG 코너 오너먼트 */
+        .corner-svg {
+            position: absolute;
+            width: 80px; height: 80px;
+            color: var(--accent);
+            pointer-events: none;
+            z-index: 2;
+            transition: color 0.8s ease;
+        }
+        .top-left { top: 20px; left: 20px; }
+        .top-right { top: 20px; right: 20px; transform: scaleX(-1); }
+        .bottom-left { bottom: 20px; left: 20px; transform: scaleY(-1); }
+        .bottom-right { bottom: 20px; right: 20px; transform: scale(-1, -1); }
+
+        /* 배경 필기체 워터마크 */
+        .bg-script {
+            position: absolute;
+            top: 55%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            font-family: 'Pinyon Script', cursive;
+            font-size: 140px;
+            color: var(--accent);
+            opacity: 0.05;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+            transition: color 0.8s ease;
+        }
+
+        /* ✍️ 에디터 영역 */
+        .editor-area {
+            width: 100%;
+            height: 90%;
+            outline: none;
+            font-family: 'Noto Serif KR', serif;
+            text-align: center;
+            overflow-y: auto;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: text;
+            animation: softReveal 1.8s ease forwards;
+        }
+
+        @keyframes softReveal {
+            0% { opacity: 0; transform: translateY(15px); filter: blur(4px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        /* 중앙 텍스트 레이아웃 (영문 레퍼런스 스타일) */
+        .invite-intro {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.3em;
+            color: var(--accent);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .invite-names {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 4.5rem;
+            line-height: 1.1;
+            color: var(--text-main);
+            margin: 0 0 30px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.02);
+            padding: 0 20px;
+        }
+
+        .invite-datetime {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+            color: var(--text-main);
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--line-color);
+            padding-bottom: 20px;
+            display: inline-block;
+        }
+
+        .invite-location {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1rem;
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+        }
+
+        .invite-outro {
+            font-family: 'Noto Serif KR', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--accent);
+            letter-spacing: 0.02em;
+        }
+
+        ::-webkit-scrollbar { width: 0; }
+
+        @media (max-width: 768px) {
+            .holy-card { width: 90vw; height: 90vw; padding: 20px; }
+            .invite-names { font-size: 3.5rem; }
+            .invite-datetime { font-size: 0.9rem; }
+            .invite-location { font-size: 0.85rem; }
+        }
+
+        /* --- UI 요소들 --- */
+        .toolbar {
+            position: absolute;
+            top: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            z-index: 100;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .toolbar select {
+            background: transparent; border: none; font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem; outline: none; cursor: pointer; color: #333;
+        }
+
+        .toolbar button {
+            background: transparent; border: none; color: #666; font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem; cursor: pointer; transition: color 0.2s; padding: 4px;
+        }
+        .toolbar button:hover { color: #000; }
+
+        .divider { width: 1px; height: 14px; background: #ddd; }
+
+        .color-btn {
+            width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ddd;
+            display: inline-block; cursor: pointer;
+        }
+
+        .bottom-ui {
+            position: fixed; bottom: 30px; display: flex; align-items: center; gap: 20px; z-index: 100;
+        }
+        .theme-btn {
+            background: transparent; border: none; color: var(--text-muted); cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif; font-size: 0.85rem; letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+        .theme-btn:hover { color: var(--text-main); }
+
+        .toggle-ui-btn {
+            position: fixed; top: 30px; right: 40px; background: transparent;
+            border: 1px solid var(--line-color); color: var(--text-muted); padding: 6px 14px;
+            border-radius: 4px; font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem;
+            cursor: pointer; z-index: 100; transition: all 0.3s ease;
+        }
+        .toggle-ui-btn:hover { border-color: var(--text-main); color: var(--text-main); }
+
+    </style>
+</head>
+<body class="theme-classic">
+
+    <button class="toggle-ui-btn" id="toggle-ui-btn" onclick="toggleUI()" data-html2canvas-ignore="true">Hide UI</button>
+
+    <div class="card-perspective-wrapper">
+        <div class="card-wrapper" id="card-wrapper">
+            
+            <div class="toolbar" id="main-toolbar" data-html2canvas-ignore="true">
+                <select onchange="changeFont(this.value)">
+                    <option value="'Noto Serif KR', serif">본명조</option>
+                    <option value="'Nanum Myeongjo', serif">나눔 명조</option>
+                    <option value="'Pinyon Script', cursive">필기체 (영문)</option>
+                    <option value="'Cinzel', serif">클래식 (영문)</option>
+                </select>
+                
+                <span class="divider"></span>
+                <button onclick="formatText('bold')"><b>B</b></button>
+                <button onclick="formatText('italic')"><i>I</i></button>
+                <button onclick="formatText('underline')"><u>U</u></button>
+                <span class="divider"></span>
+                
+                <span class="color-btn" style="background: #333;" onclick="formatText('foreColor', 'var(--text-main)')" title="기본색"></span>
+                <span class="color-btn" style="background: #bba58e;" onclick="formatText('foreColor', '#bba58e')" title="골드"></span>
+                <span class="color-btn" style="background: #dcaeb6;" onclick="formatText('foreColor', '#dcaeb6')" title="핑크"></span>
+                <span class="color-btn" style="background: #a4b5d0;" onclick="formatText('foreColor', '#a4b5d0')" title="실버"></span>
+                
+                <span class="divider"></span>
+                <button onclick="formatText('justifyCenter')">중앙</button>
+                <button onclick="formatText('justifyLeft')">좌측</button>
+                <span class="divider"></span>
+                <button style="color: #bba58e; font-weight: 500;" onclick="saveImage()">저장하기</button>
+            </div>
+
+            <div class="holy-card" id="invite-card">
+                
+                <svg class="corner-svg top-left" viewBox="0 0 100 100">
+                    <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50 M 0 70 Q 15 60 25 25 M 70 0 Q 60 15 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="15" cy="15" r="2" fill="currentColor"/>
+                </svg>
+                <svg class="corner-svg top-right" viewBox="0 0 100 100">
+                    <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50 M 0 70 Q 15 60 25 25 M 70 0 Q 60 15 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="15" cy="15" r="2" fill="currentColor"/>
+                </svg>
+                <svg class="corner-svg bottom-left" viewBox="0 0 100 100">
+                    <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50 M 0 70 Q 15 60 25 25 M 70 0 Q 60 15 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="15" cy="15" r="2" fill="currentColor"/>
+                </svg>
+                <svg class="corner-svg bottom-right" viewBox="0 0 100 100">
+                    <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50 M 0 70 Q 15 60 25 25 M 70 0 Q 60 15 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="15" cy="15" r="2" fill="currentColor"/>
+                </svg>
+
+                <div class="bg-script">Always Love</div>
+
+                <div class="editor-area" id="editor" contenteditable="true">
+                    <div class="invite-intro">You're Invited To</div>
+                    
+                    <div class="invite-names">
+                        Hyesung & Arin
+                    </div>
+                    
+                    <div class="invite-datetime">
+                        DECEMBER 4, 2030<br>
+                        <span style="font-size: 0.85em; opacity: 0.8;">2:00 PM IN THE AFTERNOON</span>
+                    </div>
+                    
+                    <div class="invite-location">
+                        ARCH Sky Lounge<br>
+                        Astra Hall, Top Floor
+                    </div>
+                    
+                    <div class="invite-outro">
+                        Please join us as we become each other's only coordinate.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-ui" id="bottom-ui" data-html2canvas-ignore="true">
+        <button class="theme-btn" onclick="changeTheme('theme-classic')">Classic</button>
+        <span class="divider" style="height: 10px;"></span>
+        <button class="theme-btn" onclick="changeTheme('theme-blossom')">Blossom</button>
+        <span class="divider" style="height: 10px;"></span>
+        <button class="theme-btn" onclick="changeTheme('theme-night')">Night</button>
+    </div>
+
+    <script>
+        // 파티클 이펙트
+        setInterval(() => {
+            const petal = document.createElement("div");
+            petal.className = "petal";
+            petal.style.left = Math.random() * 100 + "vw";
+            document.body.appendChild(petal);
+
+            requestAnimationFrame(() => {
+                petal.style.transition = "transform 12s linear, opacity 3s ease-in, opacity 4s ease-out 8s";
+                petal.style.opacity = Math.random() * 0.4 + 0.1; 
+                const randomX = (Math.random() - 0.5) * 150;
+                petal.style.transform = `translate(${randomX}px, 110vh) scale(${Math.random() * 0.5 + 0.5})`;
+            });
+
+            setTimeout(() => petal.remove(), 12000);
+        }, 600);
+
+        // 마우스 인터랙션: 파티클 밀어내기 및 카드 3D 틸트
+        document.addEventListener("mousemove", e => {
+            document.querySelectorAll(".petal").forEach(p => {
+                const currentTransform = p.style.transform;
+                const match = currentTransform.match(/translateX\(([-0-9.]+)px\)/);
+                let currentX = match ? parseFloat(match[1]) : 0;
+                p.style.transform = currentTransform.replace(/translateX\([-0-9.]+px\)/, '') + ` translateX(${currentX + e.movementX * 0.05}px)`;
+            });
+
+            const card = document.getElementById("invite-card");
+            const x = (e.clientX / window.innerWidth - 0.5) * 8; 
+            const y = (e.clientY / window.innerHeight - 0.5) * 8;
+            card.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
+        });
+
+        // 텍스트 포맷팅 로직
+        function changeFont(fontFamily) {
+            document.execCommand('fontName', false, fontFamily);
+            document.getElementById('editor').focus();
+        }
+
+        function formatText(command, value = null) {
+            try {
+                document.execCommand(command, false, value);
+                document.getElementById('editor').focus();
+            } catch (error) {
+                console.log('지원하지 않는 환경');
+            }
+        }
+
+        // 테마 변경 로직
+        function changeTheme(themeName) {
+            document.body.className = themeName;
+            
+            const names = document.querySelector('.invite-names');
+            if(names) {
+                if(themeName === 'theme-night') names.style.color = '#c9d1d9';
+                else if(themeName === 'theme-blossom') names.style.color = '#5a3c43';
+                else names.style.color = '#4a433b';
+            }
+        }
+
+        // UI 토글
+        let uiVisible = true;
+        function toggleUI() {
+            const toolbar = document.getElementById('main-toolbar');
+            const bottomUi = document.getElementById('bottom-ui');
+            const btn = document.getElementById('toggle-ui-btn');
+            
+            uiVisible = !uiVisible;
+            
+            if (uiVisible) {
+                toolbar.style.opacity = '1';
+                toolbar.style.pointerEvents = 'auto';
+                bottomUi.style.display = 'flex';
+                btn.innerText = 'Hide UI';
+            } else {
+                toolbar.style.opacity = '0';
+                toolbar.style.pointerEvents = 'none';
+                bottomUi.style.display = 'none';
+                btn.innerText = 'Show UI';
+            }
+        }
+
+        // 고화질 이미지 캡처
+        function saveImage() {
+            try {
+                const element = document.getElementById('invite-card');
+                window.getSelection().removeAllRanges(); 
+                
+                const wrapper = document.getElementById('card-wrapper');
+                wrapper.style.animation = 'none';
+                wrapper.style.transform = 'translateY(0)';
+                element.style.transform = 'rotateX(0deg) rotateY(0deg)'; 
+                element.style.transition = 'none'; 
+
+                setTimeout(() => {
+                    html2canvas(element, { 
+                        scale: 3, 
+                        backgroundColor: null, 
+                        useCORS: true
+                    }).then(canvas => {
+                        const link = document.createElement('a');
+                        link.download = 'luxury_wedding_invitation.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        
+                        wrapper.style.animation = 'floatCard 8s ease-in-out infinite';
+                        element.style.transition = 'transform 0.1s ease-out, background 0.8s ease, box-shadow 0.8s ease';
+                    });
+                }, 100);
+            } catch (error) {
+                alert('이미지 저장 중 문제가 발생했습니다.');
+            }
+        }
+    </script>
+</body>
+</html>
