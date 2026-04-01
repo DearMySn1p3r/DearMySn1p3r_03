@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>미니멀 청첩장 메이커</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&family=Nanum+Myeongjo:wght@400;700&family=Noto+Serif+KR:wght@300;400;700&family=Gowun+Batang&family=Pinyon+Script&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
-        /* 🎨 테마별 CSS 변수 */
-        :root {
-            /* 🤍 클래식 웨딩 테마 (아이보리 & 샴페인 골드) */
+        /* 🎨 테마별 CSS 변수 (body 속성으로 통합하여 안정성 확보) */
+        body.theme-classic {
+            /* 🤍 클래식 웨딩 테마 */
             --body-bg: #f5f3ef;
             --card-bg: radial-gradient(circle at center, #ffffff 0%, #fdfbf7 100%);
             --text-main: #4a433b;
@@ -20,7 +22,7 @@
             --card-shadow: rgba(187, 165, 142, 0.15);
         }
 
-        .theme-blossom {
+        body.theme-blossom {
             /* 🌸 벚꽃 감성 테마 */
             --body-bg: #fcf5f7;
             --card-bg: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
@@ -32,7 +34,7 @@
             --card-shadow: rgba(220, 174, 182, 0.2);
         }
 
-        .theme-night {
+        body.theme-night {
             /* 🌙 야간 고급 테마 */
             --body-bg: #0d1117;
             --card-bg: radial-gradient(circle at center, #1c212b 0%, #0d1117 100%);
@@ -173,7 +175,7 @@
             align-items: center;
             cursor: text;
             animation: softReveal 1.8s ease forwards;
-            caret-color: transparent; /* 커서 숨김 추가 */
+            caret-color: transparent;
         }
 
         @keyframes softReveal {
@@ -425,7 +427,6 @@
 
         function formatText(command, value = null) {
             try {
-                // 브라우저 호환성을 위해 CSS 스타일로 텍스트 서식이 적용되도록 강제 설정
                 document.execCommand('styleWithCSS', false, true);
                 document.execCommand(command, false, value);
                 document.getElementById('editor').focus();
@@ -468,48 +469,65 @@
             }
         }
 
-        // 고화질 이미지 캡처 (복제 방식 적용)
+        // ✅ html2canvas 버그를 완벽 우회하는 저장 로직
         function saveImage() {
-            try {
-                const original = document.getElementById('invite-card');
+            const node = document.getElementById('invite-card');
+            const wrapper = document.getElementById('card-wrapper');
+            const editor = document.getElementById('editor');
+            
+            // 1. 캡처 버그 방지를 위해 모든 3D/애니메이션/필터 강제 초기화
+            const originalTransform = node.style.transform;
+            const originalAnimation = wrapper.style.animation;
+            const originalEditorAnimation = editor.style.animation;
+            
+            node.style.transform = 'none';
+            wrapper.style.animation = 'none';
+            
+            // 핵심 수정: 글씨가 투명해지는 원인인 애니메이션 제거 및 불투명도 100% 고정
+            editor.style.animation = 'none';
+            editor.style.opacity = '1';
+            editor.style.filter = 'none';
+            
+            // 커서 깜빡임 방지
+            editor.setAttribute('contenteditable', 'false');
 
-                // 👉 카드 복제
-                const clone = original.cloneNode(true);
+            // 2. 폰트가 완전히 로딩될 때까지 대기
+            document.fonts.ready.then(() => {
+                html2canvas(node, {
+                    scale: 3,           
+                    useCORS: true,      
+                    backgroundColor: null,
+                    // 3. 핵심 수정: 캡처할 때 만들어지는 임시 DOM에도 테마 색상을 강제로 복사해줌
+                    onclone: (clonedDoc) => {
+                        clonedDoc.body.className = document.body.className;
+                    }
+                }).then(canvas => {
+                    // 원래 상태로 완벽히 복구
+                    node.style.transform = originalTransform;
+                    wrapper.style.animation = originalAnimation;
+                    editor.style.animation = originalEditorAnimation;
+                    editor.style.opacity = '';
+                    editor.style.filter = '';
+                    editor.setAttribute('contenteditable', 'true');
 
-                // 👉 contenteditable 제거 (핵심)
-                const editor = clone.querySelector('#editor');
-                editor.removeAttribute('contenteditable');
-
-                // 👉 화면 밖에 숨김
-                clone.style.position = 'fixed';
-                clone.style.top = '-9999px';
-                clone.style.left = '-9999px';
-
-                document.body.appendChild(clone);
-
-                // 👉 애니메이션 제거
-                clone.style.transform = 'none';
-
-                setTimeout(() => {
-                    html2canvas(clone, {
-                        scale: 3,
-                        backgroundColor: null,
-                        useCORS: true
-                    }).then(canvas => {
-
-                        const link = document.createElement('a');
-                        link.download = 'luxury_wedding_invitation.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-
-                        // 👉 복제 제거
-                        clone.remove();
-                    });
-                }, 100);
-
-            } catch (error) {
-                alert('이미지 저장 중 문제가 발생했습니다.');
-            }
+                    // 다운로드
+                    const link = document.createElement('a');
+                    link.download = 'wedding_invitation.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }).catch(err => {
+                    console.error("이미지 저장 중 오류:", err);
+                    alert("이미지 저장 중 오류가 발생했습니다.");
+                    
+                    // 에러 시에도 상태 복구
+                    node.style.transform = originalTransform;
+                    wrapper.style.animation = originalAnimation;
+                    editor.style.animation = originalEditorAnimation;
+                    editor.style.opacity = '';
+                    editor.style.filter = '';
+                    editor.setAttribute('contenteditable', 'true');
+                });
+            });
         }
     </script>
 </body>
