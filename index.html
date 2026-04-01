@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>미니멀 청첩장 에디터</title>
+    <title>미니멀 청첩장 메이커</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&family=Nanum+Myeongjo:wght@400;700&family=Noto+Serif+KR:wght@300;400;700&family=Gowun+Batang&family=Pinyon+Script&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -12,16 +12,16 @@
             /* 🤍 클래식 웨딩 테마 (아이보리 & 샴페인 골드) */
             --body-bg: #f5f3ef;
             --card-bg: radial-gradient(circle at center, #ffffff 0%, #fdfbf7 100%);
-            --text-main: #4a433b;
+            --text-main: #3a332a;
             --text-muted: #888888;
-            --line-color: #e6d5a7;
+            --line-color: #e6d5a7; 
             --accent: #bba58e; 
             --petal-color: #ffffff;
             --card-shadow: rgba(187, 165, 142, 0.15);
         }
 
         .theme-blossom {
-            /* 🌸 벚꽃 감성 테마 */
+            /* 🌸 벚꽃 감성 테마 (로즈 쿼츠 & 로즈 골드) */
             --body-bg: #fcf5f7;
             --card-bg: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
             --text-main: #5a3c43;
@@ -33,7 +33,7 @@
         }
 
         .theme-night {
-            /* 🌙 야간 고급 테마 */
+            /* 🌙 야간 고급 테마 (다크 네이비 & 스텔라 실버) */
             --body-bg: #0d1117;
             --card-bg: radial-gradient(circle at center, #1c212b 0%, #0d1117 100%);
             --text-main: #c9d1d9;
@@ -91,7 +91,7 @@
             100% { transform: translateY(0px); }
         }
 
-        /* 💌 메인 청첩장 카드 */
+        /* 💌 메인 청첩장 카드 (1:1 비율 유지) */
         .holy-card {
             position: relative;
             width: 650px;
@@ -105,11 +105,12 @@
             justify-content: center;
             align-items: center;
             border-radius: 2px;
+            /* 3D 틸트 효과 부드럽게 */
             transition: transform 0.1s ease-out, background 0.8s ease, box-shadow 0.8s ease;
             transform-style: preserve-3d;
         }
 
-        /* ⚜️ 얇은 선 프레임 */
+        /* ⚜️ 화려한 얇은 선 프레임 */
         .holy-card::before {
             content: "";
             position: absolute;
@@ -157,7 +158,7 @@
             transition: color 0.8s ease;
         }
 
-        /* ✍️ 에디터 영역 */
+        /* ✍️ 에디터 영역 및 텍스트 구조 스타일 */
         .editor-area {
             width: 100%;
             height: 90%;
@@ -180,64 +181,69 @@
             100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        /* 중앙 텍스트 레이아웃 */
+        /* 중앙 강조 텍스트 레이아웃 전용 클래스 */
         .invite-intro {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.3em;
+            font-family: 'Noto Serif KR', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.25em;
             color: var(--accent);
-            margin-bottom: 15px;
-            text-transform: uppercase;
+            margin-bottom: 10px;
         }
         
         .invite-names {
-            font-family: 'Pinyon Script', cursive;
-            font-size: 4.5rem;
-            line-height: 1.1;
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.2;
             color: var(--text-main);
-            margin: 0 0 30px 0;
+            margin: 5px 0 20px 0;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.02);
-            padding: 0 20px;
+        }
+
+        .invite-message {
+            font-size: 0.9rem;
+            line-height: 2.0;
+            letter-spacing: 0.03em;
+            margin-bottom: 25px;
         }
 
         .invite-datetime {
-            font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.1em;
-            color: var(--text-main);
-            margin-bottom: 25px;
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+            margin-bottom: 10px;
             border-bottom: 1px solid var(--line-color);
-            padding-bottom: 20px;
+            padding-bottom: 10px;
             display: inline-block;
         }
 
         .invite-location {
-            font-family: 'Noto Serif KR', serif;
-            font-size: 1rem;
-            line-height: 1.8;
+            font-size: 0.95rem;
+            line-height: 1.6;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 35px;
+            color: var(--text-main);
+            margin-bottom: 20px;
         }
 
         .invite-outro {
-            font-family: 'Noto Serif KR', serif;
-            font-style: italic;
-            font-size: 0.95rem;
-            color: var(--accent);
-            letter-spacing: 0.02em;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: var(--text-muted);
         }
 
         ::-webkit-scrollbar { width: 0; }
 
         @media (max-width: 768px) {
             .holy-card { width: 90vw; height: 90vw; padding: 20px; }
-            .invite-names { font-size: 3.5rem; }
-            .invite-datetime { font-size: 0.9rem; }
-            .invite-location { font-size: 0.85rem; }
+            .invite-names { font-size: 1.8rem; }
+            .invite-message { font-size: 0.8rem; line-height: 1.8; margin-bottom: 15px; }
+            .invite-datetime { font-size: 0.9rem; padding-bottom: 5px; margin-bottom: 10px; }
+            .invite-location { font-size: 0.85rem; margin-bottom: 15px; }
+            .invite-outro { font-size: 0.65rem; }
         }
 
-        /* --- UI 요소들 --- */
+        /* --- UI 요소들 (깔끔한 HUD 스타일) --- */
         .toolbar {
             position: absolute;
             top: -70px;
@@ -246,7 +252,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             padding: 10px 20px;
             border-radius: 8px;
@@ -317,7 +323,7 @@
                 <button onmousedown="event.preventDefault(); formatText('underline')"><u>U</u></button>
                 <span class="divider"></span>
                 
-                <span class="color-btn" style="background: #4a433b;" onmousedown="event.preventDefault(); formatText('foreColor', '#4a433b')" title="기본색"></span>
+                <span class="color-btn" style="background: #3a332a;" onmousedown="event.preventDefault(); formatText('foreColor', '#3a332a')" title="기본색"></span>
                 <span class="color-btn" style="background: #bba58e;" onmousedown="event.preventDefault(); formatText('foreColor', '#bba58e')" title="골드"></span>
                 <span class="color-btn" style="background: #dcaeb6;" onmousedown="event.preventDefault(); formatText('foreColor', '#dcaeb6')" title="핑크"></span>
                 <span class="color-btn" style="background: #a4b5d0;" onmousedown="event.preventDefault(); formatText('foreColor', '#a4b5d0')" title="실버"></span>
@@ -351,24 +357,37 @@
                 <div class="bg-script">Always Love</div>
 
                 <div class="editor-area" id="editor" contenteditable="true">
-                    <div class="invite-intro">You're Invited To</div>
+                    <div class="invite-intro">함께 걷는 길</div>
                     
                     <div class="invite-names">
-                        Hyesung & Arin
+                        유혜성 <span style="font-size: 0.6em; color: var(--accent); vertical-align: middle; margin: 0 10px;">|</span> 도아린
+                    </div>
+                    
+                    <div class="invite-message">
+                        세상에는 이해할 수 없는 일들이 있습니다.<br>
+                        서로의 가장 깊은 어둠을 마주하고도,<br>
+                        상대의 빛을 꺼뜨리는 대신 기꺼이 함께 물드는 것을 선택한 우리처럼.<br><br>
+                        우리는 구원을 약속하지 않습니다. 영원을 맹세하지도 않습니다.<br>
+                        다만 서로의 죄를 나누어 짊어지고,<br>
+                        흔들리는 세상 속에서 서로의 유일한 좌표가 되기로 했습니다.<br><br>
+                        서로의 불완전함을 기꺼이 책임지기로 한<br>
+                        두 사람의 첫걸음에, 당신의 시간을 잠시 내어주시길 바랍니다.
                     </div>
                     
                     <div class="invite-datetime">
-                        DECEMBER 4, 2030<br>
-                        <span style="font-size: 0.85em; opacity: 0.8;">2:00 PM IN THE AFTERNOON</span>
+                        2030년 12월 4일 수요일<br>
+                        <span style="font-size: 0.85em; opacity: 0.8; margin-top: 5px; display: inline-block;">오후 2시</span>
                     </div>
                     
                     <div class="invite-location">
-                        ARCH Sky Lounge<br>
-                        Astra Hall, Top Floor
+                        ARCH 최상층 스카이라운지 ‘아스트라 홀’
                     </div>
                     
                     <div class="invite-outro">
-                        Please join us as we become each other's only coordinate.
+                        피로연은 예식 종료 후 같은 장소에서 진행됩니다.<br>
+                        축의금과 선물은 정중히 사양합니다.<br>
+                        빈손으로 오셔서 즐거운 시간을 보내주시는 것만으로도 충분합니다.<br>
+                        <span style="margin-top: 10px; display: inline-block;">문의: 유혜성 (010-XXXX-XXXX) &nbsp;|&nbsp; 도아린 (010-XXXX-XXXX)</span>
                     </div>
                 </div>
             </div>
@@ -384,7 +403,7 @@
     </div>
 
     <script>
-        // 파티클 이펙트
+        // 🌸 우아한 파티클 이펙트
         setInterval(() => {
             const petal = document.createElement("div");
             petal.className = "petal";
@@ -401,7 +420,7 @@
             setTimeout(() => petal.remove(), 12000);
         }, 600);
 
-        // 마우스 인터랙션: 파티클 밀어내기 및 카드 3D 틸트
+        // 🎇 마우스 인터랙션
         document.addEventListener("mousemove", e => {
             document.querySelectorAll(".petal").forEach(p => {
                 const currentTransform = p.style.transform;
@@ -424,7 +443,6 @@
 
         function formatText(command, value = null) {
             try {
-                // 브라우저 호환성을 위해 CSS 스타일로 텍스트 서식이 적용되도록 강제 설정
                 document.execCommand('styleWithCSS', false, true);
                 document.execCommand(command, false, value);
                 document.getElementById('editor').focus();
@@ -441,7 +459,7 @@
             if(names) {
                 if(themeName === 'theme-night') names.style.color = '#c9d1d9';
                 else if(themeName === 'theme-blossom') names.style.color = '#5a3c43';
-                else names.style.color = '#4a433b';
+                else names.style.color = '#3a332a';
             }
         }
 
@@ -467,53 +485,65 @@
             }
         }
 
-        // 고화질 이미지 캡처
+        // ✨ 완벽한 고화질 캡처 로직 (텍스트 보존 강화)
         function saveImage() {
             try {
                 const element = document.getElementById('invite-card');
-                window.getSelection().removeAllRanges(); // 텍스트 블록 해제
+                window.getSelection().removeAllRanges(); 
                 
-                // 캡처 전 애니메이션 및 3D 회전 효과 초기화
                 const wrapper = document.getElementById('card-wrapper');
+                const editor = document.getElementById('editor');
+                
+                // 1. 캡처 방해 요소 초기화 (애니메이션, 3D 틸트, 편집 모드 정지)
                 wrapper.style.animation = 'none';
                 wrapper.style.transform = 'translateY(0)';
                 element.style.transform = 'rotateX(0deg) rotateY(0deg)'; 
-                element.style.transition = 'none'; // 전환 효과 끄기
+                element.style.transition = 'none'; 
+                editor.setAttribute('contenteditable', 'false');
 
-                // html2canvas가 CSS 변수를 잘 읽지 못하는 문제를 해결하기 위해
-                // 현재 테마의 실제 계산된 글씨 색상을 가져와서 명시적으로 설정합니다.
-                const computedStyle = window.getComputedStyle(document.body);
-                const currentTextColor = computedStyle.getPropertyValue('--text-main').trim();
+                // 2. 글씨 증발 방지: 모든 내부 요소의 색상을 고정 RGB로 강제 변환
+                const allElements = element.querySelectorAll('*');
+                const originalStyles = new Map();
 
-                // 이름은 changeTheme에서 이미 하드코딩된 색상을 사용하므로 제외하고,
-                // 나머지 텍스트 요소들의 색상을 명시적으로 오버라이드합니다.
-                const textsToOverride = element.querySelectorAll('.invite-intro, .invite-datetime, .invite-location, .invite-outro');
-                textsToOverride.forEach(el => {
-                    el.style.color = currentTextColor;
+                allElements.forEach(el => {
+                    const computed = window.getComputedStyle(el);
+                    originalStyles.set(el, { color: el.style.color, borderColor: el.style.borderColor });
+                    
+                    if (computed.color) el.style.color = computed.color;
+                    if (computed.borderColor) el.style.borderColor = computed.borderColor;
                 });
+                
+                // 에디터 본체 색상도 고정
+                const editorComputed = window.getComputedStyle(editor);
+                const editorOrigColor = editor.style.color;
+                editor.style.color = editorComputed.color;
 
-                // 잠시 대기 후 캡처 (렌더링 안정화)
+                // 3. 렌더링 대기 후 캡처
                 setTimeout(() => {
                     html2canvas(element, { 
-                        scale: 3, // 고화질 저장
-                        backgroundColor: null, // 요소의 CSS 배경을 그대로 사용
-                        useCORS: true
+                        scale: 3, 
+                        backgroundColor: null, 
+                        useCORS: true,
+                        logging: false
                     }).then(canvas => {
-                        // 저장 완료 후 명시적으로 설정했던 색상 스타일을 다시 제거하여 동적 테마 유지
-                        textsToOverride.forEach(el => {
-                            el.style.color = '';
+                        // 4. 저장 완료 후 모든 스타일 원상 복구
+                        allElements.forEach(el => {
+                            const orig = originalStyles.get(el);
+                            el.style.color = orig.color;
+                            el.style.borderColor = orig.borderColor;
                         });
+                        editor.style.color = editorOrigColor;
+                        editor.setAttribute('contenteditable', 'true');
 
                         const link = document.createElement('a');
-                        link.download = 'luxury_wedding_invitation.png';
+                        link.download = 'minimal_wedding_invitation.png';
                         link.href = canvas.toDataURL('image/png');
                         link.click();
                         
-                        // 원상 복구
                         wrapper.style.animation = 'floatCard 8s ease-in-out infinite';
                         element.style.transition = 'transform 0.1s ease-out, background 0.8s ease, box-shadow 0.8s ease';
                     });
-                }, 100);
+                }, 150);
             } catch (error) {
                 alert('이미지 저장 중 문제가 발생했습니다.');
             }
