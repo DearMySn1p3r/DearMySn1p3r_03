@@ -180,7 +180,7 @@
             100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        /* 중앙 텍스트 레이아웃 (영문 레퍼런스 스타일) */
+        /* 중앙 텍스트 레이아웃 */
         .invite-intro {
             font-family: 'Cinzel', serif;
             font-size: 0.85rem;
@@ -246,7 +246,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 10px 20px;
             border-radius: 8px;
@@ -272,8 +272,9 @@
 
         .color-btn {
             width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ddd;
-            display: inline-block; cursor: pointer;
+            display: inline-block; cursor: pointer; transition: transform 0.2s;
         }
+        .color-btn:hover { transform: scale(1.2); }
 
         .bottom-ui {
             position: fixed; bottom: 30px; display: flex; align-items: center; gap: 20px; z-index: 100;
@@ -311,19 +312,19 @@
                 </select>
                 
                 <span class="divider"></span>
-                <button onclick="formatText('bold')"><b>B</b></button>
-                <button onclick="formatText('italic')"><i>I</i></button>
-                <button onclick="formatText('underline')"><u>U</u></button>
+                <button onmousedown="event.preventDefault(); formatText('bold')"><b>B</b></button>
+                <button onmousedown="event.preventDefault(); formatText('italic')"><i>I</i></button>
+                <button onmousedown="event.preventDefault(); formatText('underline')"><u>U</u></button>
                 <span class="divider"></span>
                 
-                <span class="color-btn" style="background: #333;" onclick="formatText('foreColor', 'var(--text-main)')" title="기본색"></span>
-                <span class="color-btn" style="background: #bba58e;" onclick="formatText('foreColor', '#bba58e')" title="골드"></span>
-                <span class="color-btn" style="background: #dcaeb6;" onclick="formatText('foreColor', '#dcaeb6')" title="핑크"></span>
-                <span class="color-btn" style="background: #a4b5d0;" onclick="formatText('foreColor', '#a4b5d0')" title="실버"></span>
+                <span class="color-btn" style="background: #4a433b;" onmousedown="event.preventDefault(); formatText('foreColor', '#4a433b')" title="기본색"></span>
+                <span class="color-btn" style="background: #bba58e;" onmousedown="event.preventDefault(); formatText('foreColor', '#bba58e')" title="골드"></span>
+                <span class="color-btn" style="background: #dcaeb6;" onmousedown="event.preventDefault(); formatText('foreColor', '#dcaeb6')" title="핑크"></span>
+                <span class="color-btn" style="background: #a4b5d0;" onmousedown="event.preventDefault(); formatText('foreColor', '#a4b5d0')" title="실버"></span>
                 
                 <span class="divider"></span>
-                <button onclick="formatText('justifyCenter')">중앙</button>
-                <button onclick="formatText('justifyLeft')">좌측</button>
+                <button onmousedown="event.preventDefault(); formatText('justifyCenter')">중앙</button>
+                <button onmousedown="event.preventDefault(); formatText('justifyLeft')">좌측</button>
                 <span class="divider"></span>
                 <button style="color: #bba58e; font-weight: 500;" onclick="saveImage()">저장하기</button>
             </div>
@@ -423,10 +424,12 @@
 
         function formatText(command, value = null) {
             try {
+                // 브라우저 호환성을 위해 CSS 스타일로 텍스트 서식이 적용되도록 강제 설정
+                document.execCommand('styleWithCSS', false, true);
                 document.execCommand(command, false, value);
                 document.getElementById('editor').focus();
             } catch (error) {
-                console.log('지원하지 않는 환경');
+                console.log('지원하지 않는 환경입니다.');
             }
         }
 
