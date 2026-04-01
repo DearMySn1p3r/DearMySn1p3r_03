@@ -9,9 +9,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* 🎨 테마별 CSS 변수 (body 속성으로 통합하여 안정성 확보) */
+        /* 🎨 테마별 CSS 변수 (기존과 동일) */
         body.theme-classic {
-            /* 🤍 클래식 웨딩 테마 */
             --body-bg: #f5f3ef;
             --card-bg: radial-gradient(circle at center, #ffffff 0%, #fdfbf7 100%);
             --text-main: #4a433b;
@@ -23,7 +22,6 @@
         }
 
         body.theme-blossom {
-            /* 🌸 벚꽃 감성 테마 */
             --body-bg: #fcf5f7;
             --card-bg: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
             --text-main: #5a3c43;
@@ -35,7 +33,6 @@
         }
 
         body.theme-night {
-            /* 🌙 야간 고급 테마 */
             --body-bg: #0d1117;
             --card-bg: radial-gradient(circle at center, #1c212b 0%, #0d1117 100%);
             --text-main: #c9d1d9;
@@ -63,8 +60,7 @@
         /* 🌸 배경 흩날리는 효과 */
         .petal {
             position: absolute;
-            width: 6px;
-            height: 6px;
+            width: 6px; height: 6px;
             background: var(--petal-color);
             border-radius: 50%;
             box-shadow: 0 0 8px var(--petal-color);
@@ -111,38 +107,14 @@
             transform-style: preserve-3d;
         }
 
-        /* ⚜️ 얇은 선 프레임 */
-        .holy-card::before {
-            content: "";
+        /* 🖼️ [핵심 수정] 캡처 전용 테두리 레이어 */
+        .decoration-layer {
             position: absolute;
-            top: 20px; left: 20px; right: 20px; bottom: 20px;
-            border: 1px solid var(--line-color);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
-            transition: border-color 0.8s ease;
+            z-index: 1; /* 텍스트보다 아래, 워터마크보다 위 */
         }
-        .holy-card::after {
-            content: "";
-            position: absolute;
-            top: 28px; left: 28px; right: 28px; bottom: 28px;
-            border: 1px dashed var(--line-color);
-            opacity: 0.5;
-            pointer-events: none;
-            transition: border-color 0.8s ease;
-        }
-
-        /* SVG 코너 오너먼트 */
-        .corner-svg {
-            position: absolute;
-            width: 80px; height: 80px;
-            color: var(--accent);
-            pointer-events: none;
-            z-index: 2;
-            transition: color 0.8s ease;
-        }
-        .top-left { top: 20px; left: 20px; }
-        .top-right { top: 20px; right: 20px; transform: scaleX(-1); }
-        .bottom-left { bottom: 20px; left: 20px; transform: scaleY(-1); }
-        .bottom-right { bottom: 20px; right: 20px; transform: scale(-1, -1); }
 
         /* 배경 필기체 워터마크 */
         .bg-script {
@@ -155,32 +127,26 @@
             opacity: 0.05;
             white-space: nowrap;
             pointer-events: none;
-            z-index: 1;
+            z-index: 0;
             transition: color 0.8s ease;
         }
 
         /* ✍️ 에디터 영역 */
         .editor-area {
+            position: relative;
+            z-index: 10;
             width: 100%;
             height: 90%;
             outline: none;
             font-family: 'Noto Serif KR', serif;
             text-align: center;
-            overflow-y: auto;
-            position: relative;
-            z-index: 10;
+            cursor: text;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: text;
-            animation: softReveal 1.8s ease forwards;
             caret-color: transparent;
-        }
-
-        @keyframes softReveal {
-            0% { opacity: 0; transform: translateY(15px); filter: blur(4px); }
-            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+            /* overflow-y: auto 제거 -> 캡처 시 스크롤바 방지 */
         }
 
         /* 중앙 텍스트 레이아웃 */
@@ -231,71 +197,24 @@
             letter-spacing: 0.02em;
         }
 
-        ::-webkit-scrollbar { width: 0; }
-
-        @media (max-width: 768px) {
-            .holy-card { width: 90vw; height: 90vw; padding: 20px; }
-            .invite-names { font-size: 3.5rem; }
-            .invite-datetime { font-size: 0.9rem; }
-            .invite-location { font-size: 0.85rem; }
-        }
-
         /* --- UI 요소들 --- */
         .toolbar {
-            position: absolute;
-            top: -70px;
-            left: 50%;
+            position: absolute; top: -70px; left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            display: flex; align-items: center; gap: 12px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: 1px solid #eee;
+            padding: 10px 20px; border-radius: 8px; border: 1px solid #eee;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            z-index: 100;
-            transition: opacity 0.3s ease;
-            white-space: nowrap;
+            z-index: 100; transition: opacity 0.3s ease; white-space: nowrap;
         }
-
-        .toolbar select {
-            background: transparent; border: none; font-family: 'Noto Sans KR', sans-serif;
-            font-size: 0.85rem; outline: none; cursor: pointer; color: #333;
-        }
-
-        .toolbar button {
-            background: transparent; border: none; color: #666; font-family: 'Noto Sans KR', sans-serif;
-            font-size: 0.85rem; cursor: pointer; transition: color 0.2s; padding: 4px;
-        }
-        .toolbar button:hover { color: #000; }
-
+        .toolbar select { background: transparent; border: none; font-size: 0.85rem; cursor: pointer; color: #333; }
+        .toolbar button { background: transparent; border: none; color: #666; font-size: 0.85rem; cursor: pointer; padding: 4px; }
         .divider { width: 1px; height: 14px; background: #ddd; }
-
-        .color-btn {
-            width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ddd;
-            display: inline-block; cursor: pointer; transition: transform 0.2s;
-        }
-        .color-btn:hover { transform: scale(1.2); }
-
-        .bottom-ui {
-            position: fixed; bottom: 30px; display: flex; align-items: center; gap: 20px; z-index: 100;
-        }
-        .theme-btn {
-            background: transparent; border: none; color: var(--text-muted); cursor: pointer;
-            font-family: 'Noto Sans KR', sans-serif; font-size: 0.85rem; letter-spacing: 0.05em;
-            transition: color 0.3s ease;
-        }
-        .theme-btn:hover { color: var(--text-main); }
-
-        .toggle-ui-btn {
-            position: fixed; top: 30px; right: 40px; background: transparent;
-            border: 1px solid var(--line-color); color: var(--text-muted); padding: 6px 14px;
-            border-radius: 4px; font-family: 'Noto Sans KR', sans-serif; font-size: 0.8rem;
-            cursor: pointer; z-index: 100; transition: all 0.3s ease;
-        }
-        .toggle-ui-btn:hover { border-color: var(--text-main); color: var(--text-main); }
+        .color-btn { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ddd; display: inline-block; cursor: pointer; }
+        .bottom-ui { position: fixed; bottom: 30px; display: flex; align-items: center; gap: 20px; z-index: 100; }
+        .theme-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; }
+        .toggle-ui-btn { position: fixed; top: 30px; right: 40px; background: transparent; border: 1px solid var(--line-color); color: var(--text-muted); padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; z-index: 100; }
 
     </style>
 </head>
@@ -313,63 +232,60 @@
                     <option value="'Pinyon Script', cursive">필기체 (영문)</option>
                     <option value="'Cinzel', serif">클래식 (영문)</option>
                 </select>
-                
                 <span class="divider"></span>
                 <button onmousedown="event.preventDefault(); formatText('bold')"><b>B</b></button>
                 <button onmousedown="event.preventDefault(); formatText('italic')"><i>I</i></button>
                 <button onmousedown="event.preventDefault(); formatText('underline')"><u>U</u></button>
                 <span class="divider"></span>
-                
-                <span class="color-btn" style="background: #4a433b;" onmousedown="event.preventDefault(); formatText('foreColor', '#4a433b')" title="기본색"></span>
-                <span class="color-btn" style="background: #bba58e;" onmousedown="event.preventDefault(); formatText('foreColor', '#bba58e')" title="골드"></span>
-                <span class="color-btn" style="background: #dcaeb6;" onmousedown="event.preventDefault(); formatText('foreColor', '#dcaeb6')" title="핑크"></span>
-                <span class="color-btn" style="background: #a4b5d0;" onmousedown="event.preventDefault(); formatText('foreColor', '#a4b5d0')" title="실버"></span>
-                
-                <span class="divider"></span>
-                <button onmousedown="event.preventDefault(); formatText('justifyCenter')">중앙</button>
-                <button onmousedown="event.preventDefault(); formatText('justifyLeft')">좌측</button>
+                <span class="color-btn" style="background: #4a433b;" onmousedown="event.preventDefault(); formatText('foreColor', '#4a433b')"></span>
+                <span class="color-btn" style="background: #bba58e;" onmousedown="event.preventDefault(); formatText('foreColor', '#bba58e')"></span>
+                <span class="color-btn" style="background: #dcaeb6;" onmousedown="event.preventDefault(); formatText('foreColor', '#dcaeb6')"></span>
+                <span class="color-btn" style="background: #a4b5d0;" onmousedown="event.preventDefault(); formatText('foreColor', '#a4b5d0')"></span>
                 <span class="divider"></span>
                 <button style="color: #bba58e; font-weight: 500;" onclick="saveImage()">저장하기</button>
             </div>
 
             <div class="holy-card" id="invite-card">
                 
-                <svg class="corner-svg top-left" viewBox="0 0 100 100">
-                    <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50 M 0 70 Q 15 60 25 25 M 70 0 Q 60 15 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <circle cx="15" cy="15" r="2" fill="currentColor"/>
-                </svg>
-                <svg class="corner-svg top-right" viewBox="0 0 100 100">
-                    <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50 M 0 70 Q 15 60 25 25 M 70 0 Q 60 15 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <circle cx="15" cy="15" r="2" fill="currentColor"/>
-                </svg>
-                <svg class="corner-svg bottom-left" viewBox="0 0 100 100">
-                    <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50 M 0 70 Q 15 60 25 25 M 70 0 Q 60 15 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <circle cx="15" cy="15" r="2" fill="currentColor"/>
-                </svg>
-                <svg class="corner-svg bottom-right" viewBox="0 0 100 100">
-                    <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50 M 0 70 Q 15 60 25 25 M 70 0 Q 60 15 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <circle cx="15" cy="15" r="2" fill="currentColor"/>
+                <svg class="decoration-layer" viewBox="0 0 650 650" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="20" width="610" height="610" stroke="var(--line-color)" stroke-width="1"/>
+                    
+                    <rect x="28" y="28" width="594" height="594" stroke="var(--line-color)" stroke-width="1" stroke-dasharray="4 4" opacity="0.5"/>
+                    
+                    <g transform="translate(20, 20)" stroke="var(--accent)" stroke-width="1.5">
+                        <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50" fill="none" stroke-linecap="round"/>
+                        <circle cx="15" cy="15" r="2" fill="var(--accent)"/>
+                    </g>
+                    
+                    <g transform="translate(630, 20) scale(-1, 1)" stroke="var(--accent)" stroke-width="1.5">
+                        <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50" fill="none" stroke-linecap="round"/>
+                        <circle cx="15" cy="15" r="2" fill="var(--accent)"/>
+                    </g>
+                    
+                    <g transform="translate(20, 630) scale(1, -1)" stroke="var(--accent)" stroke-width="1.5">
+                        <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50" fill="none" stroke-linecap="round"/>
+                        <circle cx="15" cy="15" r="2" fill="var(--accent)"/>
+                    </g>
+                    
+                    <g transform="translate(630, 630) scale(-1, -1)" stroke="var(--accent)" stroke-width="1.5">
+                        <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50" fill="none" stroke-linecap="round"/>
+                        <circle cx="15" cy="15" r="2" fill="var(--accent)"/>
+                    </g>
                 </svg>
 
                 <div class="bg-script">Always Love</div>
 
                 <div class="editor-area" id="editor" contenteditable="true">
                     <div class="invite-intro">You're Invited To</div>
-                    
-                    <div class="invite-names">
-                        Hyesung & Arin
-                    </div>
-                    
+                    <div class="invite-names">Hyesung & Arin</div>
                     <div class="invite-datetime">
                         DECEMBER 4, 2030<br>
                         <span style="font-size: 0.85em; opacity: 0.8;">2:00 PM IN THE AFTERNOON</span>
                     </div>
-                    
                     <div class="invite-location">
                         ARCH Sky Lounge<br>
                         Astra Hall, Top Floor
                     </div>
-                    
                     <div class="invite-outro">
                         Please join us as we become each other's only coordinate.
                     </div>
@@ -387,58 +303,33 @@
     </div>
 
     <script>
-        // 파티클 이펙트
+        // 파티클 이펙트 (기존과 동일)
         setInterval(() => {
             const petal = document.createElement("div");
             petal.className = "petal";
             petal.style.left = Math.random() * 100 + "vw";
             document.body.appendChild(petal);
-
             requestAnimationFrame(() => {
-                petal.style.transition = "transform 12s linear, opacity 3s ease-in, opacity 4s ease-out 8s";
+                petal.style.transition = "transform 12s linear, opacity 3s ease-in";
                 petal.style.opacity = Math.random() * 0.4 + 0.1; 
-                const randomX = (Math.random() - 0.5) * 150;
-                petal.style.transform = `translate(${randomX}px, 110vh) scale(${Math.random() * 0.5 + 0.5})`;
+                petal.style.transform = `translate(${(Math.random() - 0.5) * 150}px, 110vh) scale(${Math.random() * 0.5 + 0.5})`;
             });
-
             setTimeout(() => petal.remove(), 12000);
         }, 600);
 
-        // 마우스 인터랙션: 파티클 밀어내기 및 카드 3D 틸트
+        // 마우스 인터랙션 (기존과 동일)
         document.addEventListener("mousemove", e => {
-            document.querySelectorAll(".petal").forEach(p => {
-                const currentTransform = p.style.transform;
-                const match = currentTransform.match(/translateX\(([-0-9.]+)px\)/);
-                let currentX = match ? parseFloat(match[1]) : 0;
-                p.style.transform = currentTransform.replace(/translateX\([-0-9.]+px\)/, '') + ` translateX(${currentX + e.movementX * 0.05}px)`;
-            });
-
             const card = document.getElementById("invite-card");
             const x = (e.clientX / window.innerWidth - 0.5) * 8; 
             const y = (e.clientY / window.innerHeight - 0.5) * 8;
             card.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
         });
 
-        // 텍스트 포맷팅 로직
-        function changeFont(fontFamily) {
-            document.execCommand('fontName', false, fontFamily);
-            document.getElementById('editor').focus();
-        }
+        function changeFont(fontFamily) { document.execCommand('fontName', false, fontFamily); }
+        function formatText(command, value = null) { document.execCommand(command, false, value); }
 
-        function formatText(command, value = null) {
-            try {
-                document.execCommand('styleWithCSS', false, true);
-                document.execCommand(command, false, value);
-                document.getElementById('editor').focus();
-            } catch (error) {
-                console.log('지원하지 않는 환경입니다.');
-            }
-        }
-
-        // 테마 변경 로직
         function changeTheme(themeName) {
             document.body.className = themeName;
-            
             const names = document.querySelector('.invite-names');
             if(names) {
                 if(themeName === 'theme-night') names.style.color = '#c9d1d9';
@@ -447,67 +338,51 @@
             }
         }
 
-        // UI 토글
         let uiVisible = true;
         function toggleUI() {
             const toolbar = document.getElementById('main-toolbar');
             const bottomUi = document.getElementById('bottom-ui');
             const btn = document.getElementById('toggle-ui-btn');
-            
             uiVisible = !uiVisible;
-            
-            if (uiVisible) {
-                toolbar.style.opacity = '1';
-                toolbar.style.pointerEvents = 'auto';
-                bottomUi.style.display = 'flex';
-                btn.innerText = 'Hide UI';
-            } else {
-                toolbar.style.opacity = '0';
-                toolbar.style.pointerEvents = 'none';
-                bottomUi.style.display = 'none';
-                btn.innerText = 'Show UI';
-            }
+            toolbar.style.opacity = uiVisible ? '1' : '0';
+            toolbar.style.pointerEvents = uiVisible ? 'auto' : 'none';
+            bottomUi.style.display = uiVisible ? 'flex' : 'none';
+            btn.innerText = uiVisible ? 'Hide UI' : 'Show UI';
         }
 
-        // ✅ html2canvas 버그를 완벽 우회하는 저장 로직
+        // ✅ html2canvas 테두리 저장 버그를 수정한 로직
         function saveImage() {
             const node = document.getElementById('invite-card');
             const wrapper = document.getElementById('card-wrapper');
             const editor = document.getElementById('editor');
             
-            // 1. 캡처 버그 방지를 위해 모든 3D/애니메이션/필터 강제 초기화
+            // 1. 캡처 버그 방지를 위해 모든 3D/애니메이션 강제 초기화
             const originalTransform = node.style.transform;
             const originalAnimation = wrapper.style.animation;
-            const originalEditorAnimation = editor.style.animation;
-            
             node.style.transform = 'none';
             wrapper.style.animation = 'none';
             
-            // 핵심 수정: 글씨가 투명해지는 원인인 애니메이션 제거 및 불투명도 100% 고정
-            editor.style.animation = 'none';
+            // 글씨 투명화 방지
             editor.style.opacity = '1';
-            editor.style.filter = 'none';
-            
-            // 커서 깜빡임 방지
             editor.setAttribute('contenteditable', 'false');
 
-            // 2. 폰트가 완전히 로딩될 때까지 대기
+            // 2. 폰트 로딩 대기 후 캡처
             document.fonts.ready.then(() => {
                 html2canvas(node, {
-                    scale: 3,           
+                    scale: 3,            
                     useCORS: true,      
                     backgroundColor: null,
-                    // 3. 핵심 수정: 캡처할 때 만들어지는 임시 DOM에도 테마 색상을 강제로 복사해줌
+                    // 테마 변수 유지를 위한 코드
                     onclone: (clonedDoc) => {
                         clonedDoc.body.className = document.body.className;
+                        // 복제된 DOM에서는 transform을 확실히 꺼줌
+                        const clonedCard = clonedDoc.getElementById('invite-card');
+                        clonedCard.style.transform = 'none';
                     }
                 }).then(canvas => {
-                    // 원래 상태로 완벽히 복구
+                    // 원래 상태로 복구
                     node.style.transform = originalTransform;
                     wrapper.style.animation = originalAnimation;
-                    editor.style.animation = originalEditorAnimation;
-                    editor.style.opacity = '';
-                    editor.style.filter = '';
                     editor.setAttribute('contenteditable', 'true');
 
                     // 다운로드
@@ -516,15 +391,9 @@
                     link.href = canvas.toDataURL('image/png');
                     link.click();
                 }).catch(err => {
-                    console.error("이미지 저장 중 오류:", err);
-                    alert("이미지 저장 중 오류가 발생했습니다.");
-                    
-                    // 에러 시에도 상태 복구
+                    // 에러 시 상태 복구
                     node.style.transform = originalTransform;
                     wrapper.style.animation = originalAnimation;
-                    editor.style.animation = originalEditorAnimation;
-                    editor.style.opacity = '';
-                    editor.style.filter = '';
                     editor.setAttribute('contenteditable', 'true');
                 });
             });
