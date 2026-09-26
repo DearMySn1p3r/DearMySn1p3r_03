@@ -1,405 +1,1534 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>미니멀 청첩장 메이커</title>
-    <link rel="icon" type="image/png" href="MOMO.png">
-    <link rel="apple-touch-icon" href="MOMO.png">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&family=Nanum+Myeongjo:wght@400;700&family=Noto+Serif+KR:wght@300;400;700&family=Gowun+Batang&family=Pinyon+Script&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
-    <style>
-        /* 🎨 테마별 CSS 변수 (기존과 동일) */
-        body.theme-classic {
-            --body-bg: #f5f3ef;
-            --card-bg: radial-gradient(circle at center, #ffffff 0%, #fdfbf7 100%);
-            --text-main: #4a433b;
-            --text-muted: #888888;
-            --line-color: #e6d5a7;
-            --accent: #bba58e; 
-            --petal-color: #ffffff;
-            --card-shadow: rgba(187, 165, 142, 0.15);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>청첩장 만들기</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21C5 15.5 1.5 12 1.5 7.5A5.3 5.3 0 0 1 12 5.6 5.3 5.3 0 0 1 22.5 7.5C22.5 12 19 15.5 12 21z' fill='%23d9a3ad'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- 서체는 하나씩 따로 불러와서, 하나가 실패해도 나머지는 정상 표시 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italianno&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Diphylleia&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandiflora+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-        body.theme-blossom {
-            --body-bg: #fcf5f7;
-            --card-bg: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
-            --text-main: #5a3c43;
-            --text-muted: #a88d92;
-            --line-color: #f0b9c5;
-            --accent: #dcaeb6;
-            --petal-color: #ffb6c1;
-            --card-shadow: rgba(220, 174, 182, 0.2);
-        }
+<style>
+:root{
+  --paper:#fbfaf8; --white:#ffffff; --ink:#1f1b19; --sub:#625b56; --faint:#a19993; --line:#ebe6e1; --line2:#ddd6cf; --soft:#f4f1ed;
+  --serif:'Cormorant Garamond','Gowun Batang',serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;color:var(--ink);background:var(--paper);overflow:hidden;-webkit-font-smoothing:antialiased;font-size:13px;letter-spacing:-.01em}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,textarea{font:inherit;color:inherit}
+svg{display:block}
 
-        body.theme-night {
-            --body-bg: #0d1117;
-            --card-bg: radial-gradient(circle at center, #1c212b 0%, #0d1117 100%);
-            --text-main: #c9d1d9;
-            --text-muted: #8b949e;
-            --line-color: #4a5668;
-            --accent: #a4b5d0;
-            --petal-color: #a4b5d0;
-            --card-shadow: rgba(0, 0, 0, 0.6);
-        }
+.app{display:grid;grid-template-columns:72px 316px 1fr;grid-template-rows:56px 1fr;height:100vh;height:100dvh}
 
-        body {
-            background: var(--body-bg);
-            color: var(--text-main);
-            font-family: 'Noto Sans KR', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            transition: background 0.8s ease;
-        }
+/* ── Header ── */
+.head{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding:0 18px 0 22px;border-bottom:1px solid var(--line);background:var(--white);z-index:8}
+.mark{display:flex;align-items:baseline;gap:10px}
+.mark b{font-family:var(--serif);font-style:italic;font-weight:500;font-size:21px;letter-spacing:.005em}
+.mark span{font-size:10.5px;font-weight:600;letter-spacing:.22em;color:var(--faint);text-transform:uppercase}
+.head-act{margin-left:auto;display:flex;align-items:center;gap:8px;position:relative}
+.hbtn{height:34px;padding:0 14px;border-radius:17px;border:1px solid var(--line2);font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:border-color .15s,background .15s;background:var(--white)}
+.hbtn:hover{border-color:var(--ink)}
+.hbtn svg{width:14px;height:14px}
+.hbtn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.hbtn.dark:hover{background:#000}
 
-        /* 🌸 배경 흩날리는 효과 */
-        .petal {
-            position: absolute;
-            width: 6px; height: 6px;
-            background: var(--petal-color);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--petal-color);
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0;
-            filter: blur(1px);
-        }
+.pop{position:absolute;top:44px;right:0;width:280px;background:var(--white);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px -12px rgba(40,25,20,.22);padding:16px;opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .18s,transform .18s;z-index:20}
+.pop.on{opacity:1;transform:none;pointer-events:auto}
+.pop .lb{margin-top:12px}
+.pop .lb:first-child{margin-top:0}
+.pop .note{font-size:11.5px;color:var(--faint);margin-top:8px;line-height:1.5}
+.pop .go{width:100%;height:42px;margin-top:14px;border-radius:12px;background:var(--ink);color:#fff;font-weight:600;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:7px}
+.pop .go svg{width:15px;height:15px}
+.pop .alt{width:100%;margin-top:8px;height:34px;border-radius:10px;font-size:12.5px;color:var(--sub);font-weight:500}
+.pop .alt:hover{background:var(--soft);color:var(--ink)}
 
-        /* 3D 원근감을 위한 래퍼 */
-        .card-perspective-wrapper {
-            perspective: 1200px;
-            padding: 20px;
-            z-index: 10;
-        }
+/* ── Rail ── */
+.rail{border-right:1px solid var(--line);background:var(--paper);display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 0}
+.rb{width:56px;padding:9px 0 7px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--faint);transition:background .15s,color .15s}
+.rb svg{width:20px;height:20px}
+.rb:hover{color:var(--ink);background:var(--soft)}
+.rb.on{color:var(--ink);background:var(--white);box-shadow:0 0 0 1px var(--line),0 2px 6px -2px rgba(40,25,20,.12)}
 
-        /* 둥둥 떠다니는 애니메이션 */
-        .card-wrapper {
-            animation: floatCard 8s ease-in-out infinite;
-            transform-style: preserve-3d;
-        }
+/* ── Panel ── */
+.panel{border-right:1px solid var(--line);background:var(--white);overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:#e6e0da transparent}
+.pane{display:none;padding:26px 24px 48px}
+.pane.on{display:block;animation:rise .28s ease}
+@keyframes rise{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.ph{margin-bottom:22px}
+.ph h2{font-family:var(--serif);font-style:italic;font-weight:500;font-size:27px;line-height:1.05;letter-spacing:-.005em}
+.ph p{font-size:12.5px;color:var(--sub);margin-top:6px}
+.blk{padding:20px 0;border-top:1px solid var(--line)}
+.blk:first-of-type{border-top:0;padding-top:0}
+.lb{display:flex;align-items:baseline;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:.02em;margin-bottom:10px}
+.lb em{font-style:normal;font-weight:500;font-size:11.5px;color:var(--faint);letter-spacing:0}
+.hint{font-size:11.5px;color:var(--faint);line-height:1.6;margin-top:10px}
 
-        @keyframes floatCard {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(10px); }
-            100% { transform: translateY(0px); }
-        }
+/* palette cards */
+.pal{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pc{border:1px solid var(--line);border-radius:12px;padding:8px;text-align:left;transition:border-color .15s}
+.pc:hover{border-color:var(--line2)}
+.pc.on{border-color:var(--ink);box-shadow:inset 0 0 0 .5px var(--ink)}
+.pc-v{height:46px;border-radius:7px;position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.pc-v i{position:absolute;left:10px;right:10px;top:9px;bottom:9px;border:1px solid}
+.pc-v b{position:absolute;left:0;right:0;top:50%;transform:translateY(-52%);text-align:center;font-family:'Pinyon Script',var(--serif);font-weight:400;font-size:19px}
+.pc small{display:block;font-size:11.5px;font-weight:600;color:var(--sub);margin-top:7px;padding-left:2px}
 
-        /* 💌 메인 청첩장 카드 */
-        .holy-card {
-            position: relative;
-            width: 650px;
-            height: 650px;
-            background: var(--card-bg);
-            box-shadow: 0 20px 50px var(--card-shadow);
-            padding: 60px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 2px;
-            transition: transform 0.1s ease-out, background 0.8s ease, box-shadow 0.8s ease;
-            transform-style: preserve-3d;
-        }
+/* font list */
+.fl{position:relative;border:1px solid var(--line);border-radius:12px;max-height:318px;overflow-y:auto;scrollbar-width:thin}
+.fcat{position:sticky;top:0;z-index:1;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--faint);padding:9px 14px 7px;border-bottom:1px solid var(--line)}
+.fr{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);transition:background .12s}
+.fr:last-child{border-bottom:0}
+.fr:hover{background:#fcfbfa}
+.fr-s{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#2a2523;line-height:1.35}
+.fr small{font-size:10.5px;color:var(--faint);flex:none}
+.fr.on{background:var(--soft)}
+.fr.on small{color:var(--ink);font-weight:700}
+.fr.on small::before{content:'● ';font-size:8px;vertical-align:1px}
 
-        /* 🖼️ [핵심 수정] 캡처 전용 테두리 레이어 */
-        .decoration-layer {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1; /* 텍스트보다 아래, 워터마크보다 위 */
-        }
+/* segmented */
+.seg{display:flex;border:1px solid var(--line2);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;height:30px;border-radius:7px;font-size:12px;font-weight:600;color:var(--faint);white-space:nowrap;padding:0 4px;transition:.15s}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:var(--ink);color:#fff}
+.seg+.seg,.seg.mt{margin-top:8px}
 
-        /* 배경 필기체 워터마크 */
-        .bg-script {
-            position: absolute;
-            top: 55%; left: 50%;
-            transform: translate(-50%, -50%) rotate(-10deg);
-            font-family: 'Pinyon Script', cursive;
-            font-size: 140px;
-            color: var(--accent);
-            opacity: 0.05;
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 0;
-            transition: color 0.8s ease;
-        }
+/* frames */
+.frames{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ft{border:1px solid var(--line);border-radius:12px;padding:12px 0 9px;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:var(--sub);transition:.15s}
+.ft svg{width:34px;height:34px;color:#b3aaa4;transition:color .15s}
+.ft:hover{border-color:var(--line2)}
+.ft:hover svg{color:var(--sub)}
+.ft.on{border-color:var(--ink);color:var(--ink);box-shadow:inset 0 0 0 .5px var(--ink)}
+.ft.on svg{color:var(--ink)}
 
-        /* ✍️ 에디터 영역 */
-        .editor-area {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            height: 90%;
-            outline: none;
-            font-family: 'Noto Serif KR', serif;
-            text-align: center;
-            cursor: text;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            caret-color: transparent;
-            /* overflow-y: auto 제거 -> 캡처 시 스크롤바 방지 */
-        }
+/* ratio */
+.ratios{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.rt{border:1px solid var(--line);border-radius:12px;height:74px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;padding-bottom:9px;font-size:11.5px;font-weight:600;color:var(--sub);transition:.15s}
+.rt i{display:block;border:1.3px solid #bfb6b0;border-radius:2px;transition:.15s}
+.rt:hover{border-color:var(--line2)}
+.rt.on{border-color:var(--ink);color:var(--ink);box-shadow:inset 0 0 0 .5px var(--ink)}
+.rt.on i{border-color:var(--ink);background:var(--soft)}
 
-        /* 중앙 텍스트 레이아웃 */
-        .invite-intro {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.3em;
-            color: var(--accent);
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-        
-        .invite-names {
-            font-family: 'Pinyon Script', cursive;
-            font-size: 4.5rem;
-            line-height: 1.1;
-            color: var(--text-main);
-            margin: 0 0 30px 0;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.02);
-            padding: 0 20px;
-        }
+/* sliders */
+.rg{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;color:var(--sub);margin-top:14px}
+.rg span{width:56px;flex:none;white-space:nowrap}
+.rg b{width:40px;text-align:right;font-weight:600;color:var(--ink);flex:none;font-variant-numeric:tabular-nums}
+.rg input{flex:1;appearance:none;-webkit-appearance:none;height:2px;background:var(--line2);outline:none;border-radius:2px}
+.rg input::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--ink);cursor:pointer;box-shadow:0 0 0 4px #fff}
+.rg input::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ink);border:0}
 
-        .invite-datetime {
-            font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.1em;
-            color: var(--text-main);
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--line-color);
-            padding-bottom: 20px;
-            display: inline-block;
-        }
+/* inputs */
+.in{width:100%;height:40px;border:1px solid var(--line2);border-radius:10px;padding:0 12px;font-size:13px;background:#fff;outline:none;transition:border-color .15s}
+.in:hover{border-color:#cdc4bc}
+.in:focus{border-color:var(--ink)}
+.in::placeholder{color:#bfb7b1}
 
-        .invite-location {
-            font-family: 'Noto Serif KR', serif;
-            font-size: 1rem;
-            line-height: 1.8;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 35px;
-        }
+/* switches */
+.tog{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px;font-size:13px;font-weight:500;cursor:pointer}
+.sw{position:relative;width:36px;height:20px;flex:none}
+.sw input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.sw i{position:absolute;inset:0;border-radius:10px;background:#e2dcd6;transition:.2s;pointer-events:none}
+.sw i::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18);transition:.2s}
+.sw input:checked+i{background:var(--ink)}
+.sw input:checked+i::after{left:18px}
 
-        .invite-outro {
-            font-family: 'Noto Serif KR', serif;
-            font-style: italic;
-            font-size: 0.95rem;
-            color: var(--accent);
-            letter-spacing: 0.02em;
-        }
+/* effects */
+.fxl{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.fx{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;transition:background .15s}
+.fx+.fx{border-top:1px solid var(--line)}
+.fx:hover{background:#fcfbfa}
+.fx-ic{width:32px;height:32px;border-radius:10px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;color:var(--faint);transition:.15s}
+.fx-ic svg{width:16px;height:16px}
+.fx.on .fx-ic{background:var(--ink);border-color:var(--ink);color:#fff}
+.fx-t{flex:1;min-width:0}
+.fx-t b{display:block;font-size:13px;font-weight:600}
+.fx-t small{display:block;font-size:11.5px;color:var(--faint);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-        /* --- UI 요소들 --- */
-        .toolbar {
-            position: absolute; top: -70px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; align-items: center; gap: 12px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 10px 20px; border-radius: 8px; border: 1px solid #eee;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            z-index: 100; transition: opacity 0.3s ease; white-space: nowrap;
-        }
-        .toolbar select { background: transparent; border: none; font-size: 0.85rem; cursor: pointer; color: #333; }
-        .toolbar button { background: transparent; border: none; color: #666; font-size: 0.85rem; cursor: pointer; padding: 4px; }
-        .divider { width: 1px; height: 14px; background: #ddd; }
-        .color-btn { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ddd; display: inline-block; cursor: pointer; }
-        .bottom-ui { position: fixed; bottom: 30px; display: flex; align-items: center; gap: 20px; z-index: 100; }
-        .theme-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; }
-        .toggle-ui-btn { position: fixed; top: 30px; right: 40px; background: transparent; border: 1px solid var(--line-color); color: var(--text-muted); padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; z-index: 100; }
+/* tools */
+.tool{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;text-align:left;transition:.15s;margin-bottom:8px}
+.tool:hover{border-color:var(--ink)}
+.tool .fx-ic{color:var(--sub)}
+.tool b{display:block;font-size:13px;font-weight:600}
+.tool small{display:block;font-size:11.5px;color:var(--faint);margin-top:1px}
+.tool .arr{margin-left:auto;color:var(--faint)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gbtn{height:40px;border:1px solid var(--line2);border-radius:10px;font-size:12.5px;font-weight:600;color:var(--sub);transition:.15s}
+.gbtn:hover{border-color:var(--ink);color:var(--ink)}
+.gbtn.danger:hover{border-color:#b9483f;color:#b9483f}
 
-    </style>
+/* ── Stage ── */
+.stage{position:relative;overflow:hidden;min-width:0;background-color:var(--stage-bg,#f1ece7);background-image:radial-gradient(rgba(60,40,30,.075) 1px,transparent 1.2px);background-size:18px 18px;transition:background-color .5s}
+.toolbar{position:absolute;top:16px;left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100% - 24px);z-index:6;display:flex;align-items:center;gap:2px;padding:4px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px -10px rgba(50,30,25,.18);overflow-x:auto;scrollbar-width:none}
+.toolbar::-webkit-scrollbar{display:none}
+.tb{height:30px;min-width:30px;padding:0 9px;border-radius:9px;font-size:12.5px;font-weight:500;color:#57504b;display:inline-flex;align-items:center;justify-content:center;flex:none;transition:background .12s,color .12s}
+.tb:hover{background:var(--soft);color:var(--ink)}
+.tb.on{background:var(--ink);color:#fff}
+.tb svg{width:15px;height:15px}
+.tb-sep{width:1px;height:16px;background:var(--line);margin:0 4px;flex:none}
+.dot{width:13px;height:13px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.canvas{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:88px 56px 60px;z-index:2}
+.scaler{position:relative;flex:none;perspective:1600px}
+.tilt{position:absolute;left:50%;top:50%;transform-origin:center;transition:transform .35s ease-out;box-shadow:0 30px 60px -32px var(--shadow,rgba(0,0,0,.3)),0 2px 6px -2px rgba(0,0,0,.08)}
+.cap{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-size:10.5px;font-weight:600;letter-spacing:.22em;color:var(--stage-sub);z-index:3;pointer-events:none;text-transform:uppercase}
+.exit{position:absolute;top:16px;right:18px;z-index:6;height:34px;padding:0 16px;border-radius:17px;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.95);border:1px solid var(--line);display:none}
+
+.app.preview{grid-template-columns:1fr}
+.app.preview .stage{grid-column:1/-1}
+.app.preview .rail,.app.preview .panel,.app.preview .toolbar,.app.preview .cap{display:none}
+.app.preview .exit{display:block}
+.app.preview .scaler{animation:floatCard 8s ease-in-out infinite}
+@keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ── Modal ── */
+.modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(31,27,25,.3);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .22s}
+.modal.on{opacity:1;pointer-events:auto}
+.sheet{width:min(580px,100%);max-height:calc(100dvh - 40px);overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 30px 80px rgba(40,25,20,.22);padding:26px 26px 22px;transform:translateY(8px);transition:transform .22s}
+.modal.on .sheet{transform:none}
+.sheet-h{display:flex;align-items:flex-start;justify-content:space-between}
+.sheet-h h3{font-family:var(--serif);font-style:italic;font-weight:500;font-size:26px}
+.sheet-h p{font-size:12.5px;color:var(--sub);margin-top:4px;line-height:1.55}
+.x{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--sub);flex:none}
+.x:hover{background:var(--soft);color:var(--ink)}
+.step{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;margin:22px 0 10px}
+.step i{width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-style:normal;font-size:11px;display:grid;place-items:center}
+.ta{width:100%;border:1px solid var(--line2);border-radius:12px;padding:12px 14px;font-size:12.5px;line-height:1.7;resize:vertical;outline:none;color:var(--sub);background:var(--paper);transition:.15s}
+.ta:focus{border-color:var(--ink);background:#fff;color:var(--ink)}
+.acts{display:flex;align-items:center;gap:10px;margin-top:10px}
+.btn{height:38px;padding:0 16px;border-radius:10px;font-size:13px;font-weight:600;border:1px solid var(--line2);display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.btn:hover{border-color:var(--ink)}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.dark:hover{background:#000}
+.link{font-size:12px;color:var(--faint);text-decoration:underline;text-underline-offset:3px;margin-left:auto}
+.link:hover{color:var(--ink)}
+.chk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--sub);cursor:pointer}
+.chk input{accent-color:var(--ink)}
+
+.busy{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(251,250,248,.78);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s}
+.busy.on{opacity:1;pointer-events:auto}
+.busy .bx{width:240px;text-align:center}
+.busy p{font-size:13px;font-weight:600;margin-bottom:14px}
+.busy .bar{height:2px;background:var(--line2);overflow:hidden;border-radius:2px}
+.busy .bar i{display:block;height:100%;width:30%;background:var(--ink);transition:width .2s}
+.busy.ind .bar i{animation:ind 1.1s ease-in-out infinite}
+@keyframes ind{0%{transform:translateX(-100%)}100%{transform:translateX(340%)}}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,10px);z-index:60;background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:11px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr;grid-template-rows:52px 52vh 60px 1fr;height:100dvh}
+  .head{padding:0 12px 0 16px}
+  .mark span{display:none}
+  .hbtn{height:32px;padding:0 12px}
+  .hbtn .t-hide{display:none}
+  .stage{grid-row:2}
+  .rail{grid-row:3;flex-direction:row;justify-content:space-around;padding:6px 8px;border-right:0;border-bottom:1px solid var(--line);border-top:1px solid var(--line)}
+  .rb{width:auto;flex:1;padding:6px 0 5px;border-radius:10px}
+  .panel{grid-row:4;border-right:0}
+  .pane{padding:20px 18px 40px}
+  .ph h2{font-size:23px}
+  .toolbar{top:10px}
+  .canvas{padding:54px 16px 16px}
+  .cap{display:none}
+  .app.preview{grid-template-rows:52px 1fr 0 0}
+  .pop{position:fixed;top:58px;right:10px}
+}
+
+/* ───── Card ───── */
+.card{position:relative;overflow:hidden;background-color:var(--c-card);background-image:radial-gradient(circle at 50% 45%,var(--c-glow) 0%,var(--c-card) 78%);color:var(--c-text)}
+.c-grain,.c-orn,.c-fx{position:absolute;inset:0;pointer-events:none}
+.c-grain{opacity:.55;display:none;z-index:1}
+.has-grain .c-grain{display:block}
+.dark .c-grain{opacity:.3}
+.c-script{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%) rotate(-10deg);font-family:'Pinyon Script',cursive;font-size:120px;line-height:1.2;color:var(--c-accent);opacity:.06;white-space:nowrap;pointer-events:none;z-index:1}
+.c-orn{z-index:2}
+.c-fx{z-index:4;width:100%;height:100%}
+.c-content{position:absolute;top:var(--pad-y);bottom:var(--pad-y);left:var(--pad-x);right:var(--pad-x);display:flex;flex-direction:column;justify-content:var(--valign,center);z-index:3}
+.o-arch .c-content{top:calc(var(--pad-y) + 40px)}
+.o-laurel .c-content{top:calc(var(--pad-y) + 18px)}
+
+.editor{outline:none;width:100%;font-size:calc(14.5px * var(--fs,1));font-family:var(--f-body);font-weight:var(--body-w,400);line-height:calc(1.9 * var(--lh,1));text-align:center;color:var(--c-text);word-break:keep-all;overflow-wrap:break-word;caret-color:var(--c-accent)}
+.editing .editor{cursor:text}
+.editor ::selection{background:var(--c-sel)}
+.editor>div{min-height:1em}
+.editor .s-caps{font-family:var(--f-caps);font-size:.7em;font-weight:500;letter-spacing:.36em;text-transform:uppercase;color:var(--c-accent);line-height:2.2;margin-bottom:.6em;padding-left:.36em}
+.editor .s-title{font-family:var(--f-title);font-size:calc(var(--t-size) * 1em);font-style:var(--t-style,normal);font-weight:var(--t-weight,400);letter-spacing:var(--t-ls,0);color:var(--c-title);line-height:1.3;margin-bottom:.3em}
+.editor .s-title.hangul{font-size:calc(var(--t-size-ko) * 1em)}
+.editor .s-date{display:table;margin:0 auto 1.35em;padding:0 .4em .9em;border-bottom:1px solid var(--c-line);font-family:var(--f-caps);font-size:.86em;letter-spacing:.15em;text-transform:uppercase;line-height:1.75;min-width:4em}
+.editor .s-date.a-left{margin-left:0}
+.editor .s-date.a-right{margin-right:0}
+.editor .s-body{font-size:.94em}
+.editor .s-quote{font-style:italic;font-size:.88em;color:var(--c-accent);letter-spacing:.02em;margin-top:1.2em}
+.editor .s-small{font-size:.78em;color:var(--c-muted);line-height:calc(1.9 * var(--lh,1))}
+.editor .a-left{text-align:left}
+.editor .a-right{text-align:right}
+.editor .c-acc{color:var(--c-accent)}
+.editor .c-mut{color:var(--c-muted)}
+.editor .c-txt{color:var(--c-text)}
+.editor>[data-ph].ph-empty::before{content:attr(data-ph);opacity:.3;pointer-events:none}
+.card:not(.editing) .ph-empty{display:none}
+
+.editor .s-rule{height:2.2em;display:flex;align-items:center;justify-content:center;user-select:none}
+.editor .s-rule i{display:block;width:2.4em;height:1px;background:var(--c-accent);opacity:.45}
+.editor .s-rule b{display:block;width:.34em;height:.34em;border:1px solid var(--c-accent);transform:rotate(45deg);margin:0 .6em;opacity:.8}
+.editor .s-rule.a-left{justify-content:flex-start}
+.editor .s-rule.a-right{justify-content:flex-end}
+.editor .s-photo{width:10em;height:12.4em;margin:.2em auto 1em;background:var(--c-line) center/cover no-repeat;user-select:none}
+.editor .s-photo.a-left{margin-left:0}
+.editor .s-photo.a-right{margin-right:0}
+.shape-arch .s-photo{border-radius:5em 5em .2em .2em}
+.shape-circle .s-photo{width:9.4em;height:9.4em;border-radius:50%}
+.shape-rect .s-photo{border-radius:.2em}
+
+.editor .s-cal{width:max-content;margin:.4em auto 1.3em;user-select:none;line-height:1.2}
+.editor .s-cal.a-left{margin-left:0}
+.editor .s-cal.a-right{margin-right:0}
+.s-cal .cal-m{font-family:var(--f-title);font-style:var(--t-style,normal);font-size:1.8em;color:var(--c-title);line-height:1.3}
+.s-cal .cal-y{font-family:var(--f-caps);font-size:.6em;letter-spacing:.34em;color:var(--c-muted);margin:.3em 0 .8em;padding-left:.34em}
+.s-cal .cal-g{display:grid;grid-template-columns:repeat(7,2.1em);justify-content:center;font-family:var(--f-caps);font-size:.7em;color:var(--c-text);border-top:1px solid var(--c-line);border-bottom:1px solid var(--c-line);padding:.55em .4em}
+.s-cal .d{height:2.1em;line-height:2.1em;text-align:center;position:relative}
+.s-cal .w{color:var(--c-accent);font-size:.86em}
+.s-cal .on svg{position:absolute;left:50%;top:50%;width:1.95em;height:1.79em;margin:-1.08em 0 0 -.975em}
+.s-cal .on em{position:relative;font-style:normal;color:var(--c-card);font-weight:500}
+.s-cal .cal-empty{font-family:var(--f-body);font-size:.8em;color:var(--c-muted);opacity:.65;padding:.8em 1.2em;border:1px dashed var(--c-line)}
+.card:not(.editing) .cal-empty{display:none}
+
+.editing .s-rule,.editing .s-photo,.editing .s-cal{cursor:pointer}
+.editing .sel{outline:1px solid var(--c-accent);outline-offset:4px}
+</style>
 </head>
-<body class="theme-classic">
+<body>
 
-    <button class="toggle-ui-btn" id="toggle-ui-btn" onclick="toggleUI()" data-html2canvas-ignore="true">Hide UI</button>
-
-    <div class="card-perspective-wrapper">
-        <div class="card-wrapper" id="card-wrapper">
-            
-            <div class="toolbar" id="main-toolbar" data-html2canvas-ignore="true">
-                <select onchange="changeFont(this.value)">
-                    <option value="'Noto Serif KR', serif">본명조</option>
-                    <option value="'Nanum Myeongjo', serif">나눔 명조</option>
-                    <option value="'Pinyon Script', cursive">필기체 (영문)</option>
-                    <option value="'Cinzel', serif">클래식 (영문)</option>
-                </select>
-                <span class="divider"></span>
-                <button onmousedown="event.preventDefault(); formatText('bold')"><b>B</b></button>
-                <button onmousedown="event.preventDefault(); formatText('italic')"><i>I</i></button>
-                <button onmousedown="event.preventDefault(); formatText('underline')"><u>U</u></button>
-                <span class="divider"></span>
-                <span class="color-btn" style="background: #4a433b;" onmousedown="event.preventDefault(); formatText('foreColor', '#4a433b')"></span>
-                <span class="color-btn" style="background: #bba58e;" onmousedown="event.preventDefault(); formatText('foreColor', '#bba58e')"></span>
-                <span class="color-btn" style="background: #dcaeb6;" onmousedown="event.preventDefault(); formatText('foreColor', '#dcaeb6')"></span>
-                <span class="color-btn" style="background: #a4b5d0;" onmousedown="event.preventDefault(); formatText('foreColor', '#a4b5d0')"></span>
-                <span class="divider"></span>
-                <button style="color: #bba58e; font-weight: 500;" onclick="saveImage()">저장하기</button>
-            </div>
-
-            <div class="holy-card" id="invite-card">
-                
-                <svg class="decoration-layer" viewBox="0 0 650 650" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="20" y="20" width="610" height="610" stroke="var(--line-color)" stroke-width="1"/>
-                    
-                    <rect x="28" y="28" width="594" height="594" stroke="var(--line-color)" stroke-width="1" stroke-dasharray="4 4" opacity="0.5"/>
-                    
-                    <g transform="translate(20, 20)" stroke="var(--accent)" stroke-width="1.5">
-                        <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50" fill="none" stroke-linecap="round"/>
-                        <circle cx="15" cy="15" r="2" fill="var(--accent)"/>
-                    </g>
-                    
-                    <g transform="translate(630, 20) scale(-1, 1)" stroke="var(--accent)" stroke-width="1.5">
-                        <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50" fill="none" stroke-linecap="round"/>
-                        <circle cx="15" cy="15" r="2" fill="var(--accent)"/>
-                    </g>
-                    
-                    <g transform="translate(20, 630) scale(1, -1)" stroke="var(--accent)" stroke-width="1.5">
-                        <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50" fill="none" stroke-linecap="round"/>
-                        <circle cx="15" cy="15" r="2" fill="var(--accent)"/>
-                    </g>
-                    
-                    <g transform="translate(630, 630) scale(-1, -1)" stroke="var(--accent)" stroke-width="1.5">
-                        <path d="M 0 50 Q 0 0 50 0 Q 30 15 15 30 Q 0 50 0 50" fill="none" stroke-linecap="round"/>
-                        <circle cx="15" cy="15" r="2" fill="var(--accent)"/>
-                    </g>
-                </svg>
-
-                <div class="bg-script">Always Love</div>
-
-                <div class="editor-area" id="editor" contenteditable="true">
-                    <div class="invite-intro">You're Invited To</div>
-                    <div class="invite-names">Hyesung & Arin</div>
-                    <div class="invite-datetime">
-                        DECEMBER 4, 2030<br>
-                        <span style="font-size: 0.85em; opacity: 0.8;">2:00 PM IN THE AFTERNOON</span>
-                    </div>
-                    <div class="invite-location">
-                        ARCH Sky Lounge<br>
-                        Astra Hall, Top Floor
-                    </div>
-                    <div class="invite-outro">
-                        Please join us as we become each other's only coordinate.
-                    </div>
-                </div>
-            </div>
+<div class="app" id="app">
+  <header class="head">
+    <div class="mark"><b>Invitation</b><span>Stationery Studio</span></div>
+    <div class="head-act">
+      <button class="hbtn" id="btn-ooc-quick" title="청첩장 문구를 부탁하는 OOC 프롬프트 복사">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="5" y="5" width="8.5" height="8.5" rx="1.8"/><path d="M11 5V3.8A1.3 1.3 0 0 0 9.7 2.5H3.8a1.3 1.3 0 0 0-1.3 1.3v5.9A1.3 1.3 0 0 0 3.8 11H5"/></svg>
+        OOC<span class="t-hide">&nbsp;복사</span>
+      </button>
+      <button class="hbtn" id="btn-preview" title="미리보기">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></svg>
+        <span class="t-hide">미리보기</span>
+      </button>
+      <button class="hbtn dark" id="btn-save">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10"/></svg>
+        저장
+      </button>
+      <div class="pop" id="save-pop">
+        <div class="lb">형식</div>
+        <div class="seg">
+          <button data-k="fmt" data-v="png">PNG</button>
+          <button data-k="fmt" data-v="jpg">JPG</button>
+          <button data-k="fmt" data-v="gif">GIF</button>
         </div>
+        <div class="lb" id="size-lb">해상도</div>
+        <div class="seg" id="scale-seg">
+          <button data-k="scale" data-v="2">2x</button>
+          <button data-k="scale" data-v="3">3x</button>
+          <button data-k="scale" data-v="4">4x</button>
+        </div>
+        <div class="seg" id="gif-seg" style="margin-top:0">
+          <button data-k="gifSize" data-v="480">작게</button>
+          <button data-k="gifSize" data-v="640">보통</button>
+          <button data-k="gifSize" data-v="800">크게</button>
+        </div>
+        <p class="note" id="save-note"></p>
+        <button class="go" id="btn-download"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10"/></svg><span id="dl-label">다운로드</span></button>
+        <button class="alt" id="btn-copy">이미지를 클립보드에 복사</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="rail" id="rail">
+    <button class="rb on" data-go="palette"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 2.5a7.5 7.5 0 0 0 0 15c1.1 0 1.6-.8 1.6-1.6 0-1.3-1-1.6-1-2.6 0-.9.7-1.5 1.6-1.5h1.6a3.7 3.7 0 0 0 3.7-3.7C17.5 5.4 14.1 2.5 10 2.5z"/><circle cx="6.6" cy="9" r="1" fill="currentColor"/><circle cx="8.8" cy="6" r="1" fill="currentColor"/><circle cx="12.4" cy="6.4" r="1" fill="currentColor"/></svg>컬러</button>
+    <button class="rb" data-go="type"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 15.5 6.8 4.5h.4l4.3 11M4.2 11.5h5.6"/><path d="M17.5 15.5v-5a2.4 2.4 0 0 0-4.6-1M17.5 13c-.4 1.6-1.6 2.6-2.9 2.6-1.1 0-1.9-.7-1.9-1.7 0-1.5 1.7-2 4.8-2"/></svg>서체</button>
+    <button class="rb" data-go="frame"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="1"/><path d="M3 7.5Q3 3 7.5 3M17 12.5q0 4.5-4.5 4.5"/></svg>프레임</button>
+    <button class="rb" data-go="layout"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="4" y="2.5" width="12" height="15" rx="1.5"/><path d="M7.5 7h5M6.5 10h7M8 13h4"/></svg>배치</button>
+    <button class="rb" data-go="fx"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M9 2.5Q9.7 8.3 15.5 9Q9.7 9.7 9 15.5Q8.3 9.7 2.5 9Q8.3 8.3 9 2.5z"/><path d="M15.5 13.5q.25 2 2 2.2-1.75.25-2 2.3-.25-2.05-2-2.3 1.75-.2 2-2.2z"/></svg>효과</button>
+    <button class="rb" data-go="tools"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h12v8.5H9.5l-3.5 3v-3H4z"/><path d="M7 7.5h6M7 10h3.5"/></svg>도구</button>
+  </nav>
+
+  <aside class="panel" id="panel">
+    <!-- 컬러 -->
+    <section class="pane on" data-pane="palette">
+      <div class="ph"><h2>Palette</h2><p>카드의 색감을 골라 주세요</p></div>
+      <div class="pal" id="pal"></div>
+    </section>
+
+    <!-- 서체 -->
+    <section class="pane" data-pane="type">
+      <div class="ph"><h2>Typography</h2><p>제목과 본문 서체를 따로 고를 수 있어요</p></div>
+      <div class="blk">
+        <div class="lb">제목 서체 <em id="tf-name"></em></div>
+        <div class="fl" id="tfonts"></div>
+      </div>
+      <div class="blk">
+        <div class="lb">본문 서체 <em id="bf-name"></em></div>
+        <div class="fl" id="bfonts" style="max-height:268px"></div>
+      </div>
+      <div class="blk">
+        <div class="lb">소제목 · 날짜 서체</div>
+        <div class="seg" id="cfonts"></div>
+      </div>
+    </section>
+
+    <!-- 프레임 -->
+    <section class="pane" data-pane="frame">
+      <div class="ph"><h2>Frame</h2><p>테두리 장식을 골라 주세요</p></div>
+      <div class="frames" id="frames"></div>
+      <div class="blk" style="margin-top:20px;border-top:1px solid var(--line);padding-top:20px">
+        <div class="lb">배경 필기체</div>
+        <input class="in" data-k="watermark" placeholder="예: Always Love">
+        <label class="tog" style="margin-top:8px">종이 질감<span class="sw"><input type="checkbox" data-k="grain"><i></i></span></label>
+      </div>
+    </section>
+
+    <!-- 배치 -->
+    <section class="pane" data-pane="layout">
+      <div class="ph"><h2>Layout</h2><p>카드 비율과 글의 배치를 정해요</p></div>
+      <div class="blk">
+        <div class="lb">비율</div>
+        <div class="ratios">
+          <button class="rt" data-k="ratio" data-v="1:1"><i style="width:26px;height:26px"></i>1:1</button>
+          <button class="rt" data-k="ratio" data-v="4:5"><i style="width:23px;height:29px"></i>4:5</button>
+          <button class="rt" data-k="ratio" data-v="A5"><i style="width:21px;height:30px"></i>A5</button>
+          <button class="rt" data-k="ratio" data-v="9:16"><i style="width:18px;height:32px"></i>9:16</button>
+        </div>
+      </div>
+      <div class="blk">
+        <div class="lb">글 위치</div>
+        <div class="seg">
+          <button data-k="valign" data-v="flex-start">위</button>
+          <button data-k="valign" data-v="center">가운데</button>
+          <button data-k="valign" data-v="flex-end">아래</button>
+        </div>
+        <div class="rg"><span>글자 크기</span><input type="range" min="80" max="130" data-k="textScale"><b id="ts-val"></b></div>
+        <div class="rg"><span>줄 간격</span><input type="range" min="80" max="140" data-k="lineH"><b id="lh-val"></b></div>
+      </div>
+      <div class="blk">
+        <div class="lb">사진 모양</div>
+        <div class="seg">
+          <button data-k="shape" data-v="arch">아치</button>
+          <button data-k="shape" data-v="circle">원형</button>
+          <button data-k="shape" data-v="rect">사각</button>
+        </div>
+        <p class="hint">위쪽 툴바의 사진 버튼으로 카드에 사진을 넣을 수 있어요.</p>
+      </div>
+    </section>
+
+    <!-- 효과 -->
+    <section class="pane" data-pane="fx">
+      <div class="ph"><h2>Motion</h2><p>켜고 끌 수 있고, 여러 개를 함께 켤 수 있어요</p></div>
+      <div class="fxl" id="fx-list"></div>
+      <p class="hint">화면과 GIF에만 보이고 PNG·JPG에는 담기지 않아요.</p>
+      <div class="blk" style="margin-top:20px;border-top:1px solid var(--line);padding-top:20px">
+        <div class="lb">양</div>
+        <div class="seg">
+          <button data-k="fxAmount" data-v="0.6">적게</button>
+          <button data-k="fxAmount" data-v="1">보통</button>
+          <button data-k="fxAmount" data-v="1.6">많이</button>
+        </div>
+        <div class="lb" style="margin-top:16px">속도</div>
+        <div class="seg">
+          <button data-k="fxSpeed" data-v="14000">느리게</button>
+          <button data-k="fxSpeed" data-v="10080">보통</button>
+          <button data-k="fxSpeed" data-v="7040">빠르게</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 도구 -->
+    <section class="pane" data-pane="tools">
+      <div class="ph"><h2>Tools</h2><p>문구 도우미와 작업 관리</p></div>
+      <button class="tool" id="btn-ooc-open">
+        <span class="fx-ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3.5h10v7H7.5L4.5 13v-2.5H3z"/><path d="M5.8 6.2h4.4M5.8 8.2h2.8"/></svg></span>
+        <span><b>문구 도우미</b><small>OOC 복사 → 받은 답을 붙여넣으면 카드 완성</small></span>
+      </button>
+      <button class="tool" id="btn-copy-text">
+        <span class="fx-ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M3 4h10M3 7h10M3 10h6"/></svg></span>
+        <span><b>카드 글 복사</b><small>카드에 쓴 글을 텍스트로 복사해요</small></span>
+      </button>
+      <div class="blk" style="margin-top:12px;border-top:1px solid var(--line);padding-top:20px">
+        <div class="lb">달력 날짜 <em>툴바의 달력 버튼으로 넣어요</em></div>
+        <input class="in" type="date" data-k="calDate">
+      </div>
+      <div class="blk">
+        <div class="lb">작업 관리</div>
+        <div class="grid2">
+          <button class="gbtn" id="btn-proj-save">파일로 보관</button>
+          <button class="gbtn" id="btn-proj-load">불러오기</button>
+          <button class="gbtn danger" id="btn-reset" style="grid-column:1/-1">처음 틀로 되돌리기</button>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+  <main class="stage" id="stage">
+    <div class="toolbar" id="toolbar">
+      <button class="tb" data-style="caps" title="소제목 (넓은 자간)">소제목</button>
+      <button class="tb" data-style="title" title="제목">제목</button>
+      <button class="tb" data-style="date" title="밑줄이 있는 날짜 줄">날짜</button>
+      <button class="tb" data-style="body" title="본문">본문</button>
+      <button class="tb" data-style="quote" title="포인트 색 기울임">문구</button>
+      <button class="tb" data-style="small" title="작은 글씨">작게</button>
+      <span class="tb-sep"></span>
+      <button class="tb" data-cmd="bold" title="굵게"><b>B</b></button>
+      <button class="tb" data-cmd="italic" title="기울임"><i style="font-family:Georgia,serif">I</i></button>
+      <span class="tb-sep"></span>
+      <button class="tb" data-align="left" title="왼쪽 정렬"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button>
+      <button class="tb" data-align="center" title="가운데 정렬"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button>
+      <button class="tb" data-align="right" title="오른쪽 정렬"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button>
+      <span class="tb-sep"></span>
+      <button class="tb" data-color="txt" title="기본 색"><span class="dot" id="dot-txt"></span></button>
+      <button class="tb" data-color="acc" title="포인트 색"><span class="dot" id="dot-acc"></span></button>
+      <button class="tb" data-color="mut" title="연한 색"><span class="dot" id="dot-mut"></span></button>
+      <span class="tb-sep"></span>
+      <button class="tb" id="tb-rule" title="장식 구분선"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M1.5 8h4.3M10.2 8h4.3"/><path d="M8 6.3 9.7 8 8 9.7 6.3 8z"/></svg></button>
+      <button class="tb" id="tb-cal" title="달력"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><rect x="2.5" y="3.5" width="11" height="10" rx="1.2"/><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5"/><path d="M8 11.6c-1.6-1-2.2-1.7-2.2-2.4a1 1 0 0 1 2.2-.4 1 1 0 0 1 2.2.4c0 .7-.6 1.4-2.2 2.4z" fill="currentColor" stroke="none"/></svg></button>
+      <button class="tb" id="tb-photo" title="사진"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><rect x="2" y="3" width="12" height="10" rx="1.5"/><circle cx="6" cy="6.5" r="1.1"/><path d="M2.5 12l3.5-3.5 2.5 2.5 2-2 3 3"/></svg></button>
     </div>
 
-    <div class="bottom-ui" id="bottom-ui" data-html2canvas-ignore="true">
-        <button class="theme-btn" onclick="changeTheme('theme-classic')">Classic</button>
-        <span class="divider" style="height: 10px;"></span>
-        <button class="theme-btn" onclick="changeTheme('theme-blossom')">Blossom</button>
-        <span class="divider" style="height: 10px;"></span>
-        <button class="theme-btn" onclick="changeTheme('theme-night')">Night</button>
+    <div class="canvas" id="canvas">
+      <div class="scaler" id="scaler">
+        <div class="tilt" id="tilt">
+          <div class="card editing" id="card">
+            <div class="c-grain"></div>
+            <div class="c-script"></div>
+            <div class="c-orn"></div>
+            <div class="c-content"><div class="editor" id="editor" contenteditable="true" spellcheck="false"></div></div>
+            <canvas class="c-fx" id="fx-canvas" data-html2canvas-ignore="true"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <script>
-        // 파티클 이펙트 (기존과 동일)
-        setInterval(() => {
-            const petal = document.createElement("div");
-            petal.className = "petal";
-            petal.style.left = Math.random() * 100 + "vw";
-            document.body.appendChild(petal);
-            requestAnimationFrame(() => {
-                petal.style.transition = "transform 12s linear, opacity 3s ease-in";
-                petal.style.opacity = Math.random() * 0.4 + 0.1; 
-                petal.style.transform = `translate(${(Math.random() - 0.5) * 150}px, 110vh) scale(${Math.random() * 0.5 + 0.5})`;
-            });
-            setTimeout(() => petal.remove(), 12000);
-        }, 600);
+    <div class="cap" id="cap"></div>
+    <button class="exit" id="btn-exit">편집으로 돌아가기</button>
+  </main>
+</div>
 
-        // 마우스 인터랙션 (기존과 동일)
-        document.addEventListener("mousemove", e => {
-            const card = document.getElementById("invite-card");
-            const x = (e.clientX / window.innerWidth - 0.5) * 8; 
-            const y = (e.clientY / window.innerHeight - 0.5) * 8;
-            card.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
-        });
+<!-- 문구 도우미 -->
+<div class="modal" id="ooc-modal">
+  <div class="sheet">
+    <div class="sheet-h">
+      <div><h3>Wording Helper</h3><p>OOC 프롬프트를 대화에 보내고, 받은 답을 붙여넣으면 카드가 채워져요.</p></div>
+      <button class="x" data-close><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3l8 8M11 3l-8 8"/></svg></button>
+    </div>
+    <div class="step"><i>1</i>OOC 프롬프트 복사</div>
+    <textarea class="ta" id="ooc-text" rows="9" spellcheck="false"></textarea>
+    <div class="acts">
+      <button class="btn dark" id="ooc-copy">복사하기</button>
+      <button class="link" id="ooc-reset">원래 문구로</button>
+    </div>
+    <div class="step"><i>2</i>받은 답 붙여넣기</div>
+    <textarea class="ta" id="ooc-result" rows="7" spellcheck="false" placeholder="· 신랑/신부 이름: …&#10;· 결혼 날짜 및 시간: …&#10;· 예식 장소: …&#10;· 청첩장 문구: …&#10;· 추가 안내 사항: …&#10;· 전체 분위기 및 컨셉: …"></textarea>
+    <div class="acts">
+      <button class="btn dark" id="ooc-fill">카드에 채우기</button>
+      <label class="chk"><input type="checkbox" id="ooc-theme" checked>분위기에 맞춰 디자인도 추천</label>
+      <button class="link" id="ooc-undo" style="display:none">되돌리기</button>
+    </div>
+  </div>
+</div>
 
-        function changeFont(fontFamily) { document.execCommand('fontName', false, fontFamily); }
-        function formatText(command, value = null) { document.execCommand(command, false, value); }
+<input type="file" id="photo-input" accept="image/*" hidden>
+<input type="file" id="proj-input" accept=".json,application/json" hidden>
+<div class="busy" id="busy"><div class="bx"><p id="busy-text">렌더링 중…</p><div class="bar"><i id="busy-bar"></i></div></div></div>
+<div class="toast" id="toast"></div>
 
-        function changeTheme(themeName) {
-            document.body.className = themeName;
-            const names = document.querySelector('.invite-names');
-            if(names) {
-                if(themeName === 'theme-night') names.style.color = '#c9d1d9';
-                else if(themeName === 'theme-blossom') names.style.color = '#5a3c43';
-                else names.style.color = '#4a433b';
-            }
-        }
+<script>
+/* ───────── Options ───────── */
+const THEMES = {
+  blush:   { name:'Blush & Gold', card:'#fdf7f4', glow:'#fffdfb', text:'#6b5054', muted:'#a68f92', title:'#c29a55', accent:'#c9a35d', line:'#ecc6cc', bg:'#f3e9e5', petal:['#f4c3cb','#fbe3e6'] },
+  rose:    { name:'Rose',         card:'#fffafb', glow:'#ffffff', text:'#7a2d47', muted:'#b27f90', title:'#d24a7c', accent:'#e0608f', line:'#f2b3c6', bg:'#f7eaee', petal:['#f58fae','#fcd0dd'] },
+  ivory:   { name:'Ivory',        card:'#fdfbf7', glow:'#ffffff', text:'#4a433b', muted:'#8e877f', title:'#4a433b', accent:'#bba58e', line:'#e6d5a7', bg:'#f0ece6', petal:['#efe0cb','#fbf5ec'] },
+  sage:    { name:'Sage',         card:'#fafbf6', glow:'#ffffff', text:'#3f4639', muted:'#8a917f', title:'#6f8262', accent:'#98a888', line:'#d9e0cf', bg:'#ebeee6', petal:['#d6e0c8','#f1f4ea'] },
+  lilac:   { name:'Lilac',        card:'#fcfafd', glow:'#ffffff', text:'#574869', muted:'#9b8eab', title:'#9a7db6', accent:'#b49ccb', line:'#e3d6ef', bg:'#efebf4', petal:['#d8c5ec','#f0e8f8'] },
+  blue:    { name:'Periwinkle',   card:'#ffffff', glow:'#ffffff', text:'#3f4880', muted:'#8990b8', title:'#5d6bb6', accent:'#b7a37a', line:'#cfd5ef', bg:'#eaedf5', petal:['#b5c0ee','#e2e7fb'] },
+  mocha:   { name:'Mocha',        card:'#f7f1ea', glow:'#fbf7f2', text:'#4f3f35', muted:'#968474', title:'#7a5b47', accent:'#a88468', line:'#e2d2c2', bg:'#ece5dd', petal:['#dcc3ad','#f2e6da'] },
+  navy:    { name:'Midnight Navy',card:'#1d2552', glow:'#28336b', text:'#ebe8f4', muted:'#a9b0d0', title:'#f1eee6', accent:'#cfd3e6', line:'#6671a3', bg:'#e6e9f1', petal:['#ffffff','#c9d0ee'], dark:true },
+};
 
-        let uiVisible = true;
-        function toggleUI() {
-            const toolbar = document.getElementById('main-toolbar');
-            const bottomUi = document.getElementById('bottom-ui');
-            const btn = document.getElementById('toggle-ui-btn');
-            uiVisible = !uiVisible;
-            toolbar.style.opacity = uiVisible ? '1' : '0';
-            toolbar.style.pointerEvents = uiVisible ? 'auto' : 'none';
-            bottomUi.style.display = uiVisible ? 'flex' : 'none';
-            btn.innerText = uiVisible ? 'Hide UI' : 'Show UI';
-        }
+const KR_FB = "'Gowun Batang','Noto Serif KR',serif";
+const SANS = "'Pretendard Variable',Pretendard,system-ui,sans-serif";
+// ko: 한글 글꼴 여부 (영문 필기체에 한글을 쓰면 자동으로 크기를 줄여 균형을 맞춤)
+const TITLE_FONTS = [
+  ['필기체', [
+    { id:'pinyon',     name:'Pinyon Script',       f:"'Pinyon Script'",       size:3.3 },
+    { id:'vibes',      name:'Great Vibes',         f:"'Great Vibes'",         size:3.2 },
+    { id:'parisienne', name:'Parisienne',          f:"'Parisienne'",          size:2.8 },
+    { id:'alex',       name:'Alex Brush',          f:"'Alex Brush'",          size:3.1 },
+    { id:'allura',     name:'Allura',              f:"'Allura'",              size:3.4 },
+    { id:'italianno',  name:'Italianno',           f:"'Italianno'",           size:3.9 },
+    { id:'delafield',  name:'Mrs Saint Delafield', f:"'Mrs Saint Delafield'", size:3.6 },
+  ]],
+  ['세리프', [
+    { id:'cormorant',  name:'Cormorant Italic',    f:"'Cormorant Garamond'",  size:2.6, style:'italic' },
+    { id:'playfair',   name:'Playfair Italic',     f:"'Playfair Display'",    size:2.1, style:'italic' },
+    { id:'bodoni',     name:'Bodoni Italic',       f:"'Bodoni Moda'",         size:2.1, style:'italic' },
+    { id:'cinzel',     name:'Cinzel',              f:"'Cinzel'",              size:1.7, ls:'.08em' },
+  ]],
+  ['한글', [
+    { id:'grandiflora',name:'그랜디플로라',          f:"'Grandiflora One'",     size:1.95, ko:1 },
+    { id:'diphylleia', name:'디필레이아',            f:"'Diphylleia'",          size:1.95, ko:1 },
+    { id:'songmyung',  name:'송명',                 f:"'Song Myung'",          size:2.0, ko:1 },
+    { id:'myeongjo',   name:'나눔명조',              f:"'Nanum Myeongjo'",      size:1.8, weight:700, ls:'.08em', ko:1 },
+    { id:'hahmlet',    name:'함렛',                 f:"'Hahmlet'",             size:1.8, weight:300, ls:'.06em', ko:1 },
+    { id:'gowun',      name:'고운바탕',              f:"'Gowun Batang'",        size:1.85, ls:'.04em', ko:1 },
+    { id:'dodum',      name:'고운돋움',              f:"'Gowun Dodum'",         size:1.8, ls:'.06em', ko:1 },
+    { id:'pen',        name:'나눔손글씨 펜',          f:"'Nanum Pen Script'",    size:2.7, ko:1 },
+  ]],
+];
+const BODY_FONTS = [
+  ['명조 · 바탕', [
+    { id:'notoserif',  name:'본명조',       f:"'Noto Serif KR'",   w:300 },
+    { id:'gowun',      name:'고운바탕',     f:"'Gowun Batang'" },
+    { id:'myeongjo',   name:'나눔명조',     f:"'Nanum Myeongjo'" },
+    { id:'hahmlet',    name:'함렛',        f:"'Hahmlet'",         w:300 },
+    { id:'diphylleia', name:'디필레이아',   f:"'Diphylleia'" },
+  ]],
+  ['고딕', [
+    { id:'dodum',      name:'고운돋움',     f:"'Gowun Dodum'" },
+    { id:'pretendard', name:'프리텐다드',   f:SANS,                w:300 },
+    { id:'notosans',   name:'본고딕',       f:"'Noto Sans KR'",    w:300 },
+  ]],
+];
+const CAPS_FONTS = [
+  { id:'cinzel',    name:'Cinzel',     f:"'Cinzel'" },
+  { id:'cormorant', name:'Cormorant',  f:"'Cormorant Garamond'" },
+  { id:'playfair',  name:'Playfair',   f:"'Playfair Display'" },
+  { id:'body',      name:'본문과 같게', f:null },
+];
+const TF = Object.fromEntries(TITLE_FONTS.flatMap(g => g[1]).map(x => [x.id, x]));
+const BF = Object.fromEntries(BODY_FONTS.flatMap(g => g[1]).map(x => [x.id, x]));
+const CF = Object.fromEntries(CAPS_FONTS.map(x => [x.id, x]));
 
-        // ✅ html2canvas 테두리 저장 버그를 수정한 로직
-        function saveImage() {
-            const node = document.getElementById('invite-card');
-            const wrapper = document.getElementById('card-wrapper');
-            const editor = document.getElementById('editor');
-            
-            // 1. 캡처 버그 방지를 위해 모든 3D/애니메이션 강제 초기화
-            const originalTransform = node.style.transform;
-            const originalAnimation = wrapper.style.animation;
-            node.style.transform = 'none';
-            wrapper.style.animation = 'none';
-            
-            // 글씨 투명화 방지
-            editor.style.opacity = '1';
-            editor.setAttribute('contenteditable', 'false');
+const RATIOS = { '1:1':[650,650,88,88], '4:5':[620,775,84,96], 'A5':[580,822,80,98], '9:16':[540,960,72,112] };
 
-            // 2. 폰트 로딩 대기 후 캡처
-            document.fonts.ready.then(() => {
-                html2canvas(node, {
-                    scale: 3,            
-                    useCORS: true,      
-                    backgroundColor: null,
-                    // 테마 변수 유지를 위한 코드
-                    onclone: (clonedDoc) => {
-                        clonedDoc.body.className = document.body.className;
-                        // 복제된 DOM에서는 transform을 확실히 꺼줌
-                        const clonedCard = clonedDoc.getElementById('invite-card');
-                        clonedCard.style.transform = 'none';
-                    }
-                }).then(canvas => {
-                    // 원래 상태로 복구
-                    node.style.transform = originalTransform;
-                    wrapper.style.animation = originalAnimation;
-                    editor.setAttribute('contenteditable', 'true');
+const FRAMES = [
+  ['baroque','바로크','<rect x="3" y="3" width="30" height="30" opacity=".4"/><path d="M5.5 14.5C5.5 9.5 9.5 5.5 14.5 5.5C17.5 5.5 18.6 7.6 16.8 8.8M5.5 14.5C5.5 17.5 7.6 18.6 8.8 16.8M30.5 21.5C30.5 26.5 26.5 30.5 21.5 30.5C18.5 30.5 17.4 28.4 19.2 27.2M30.5 21.5C30.5 18.5 28.4 17.4 27.2 19.2"/>'],
+  ['lace','레이스','<path d="M4 7a2 2 0 0 1 4 0a2 2 0 0 1 4 0a2 2 0 0 1 4 0a2 2 0 0 1 4 0a2 2 0 0 1 4 0a2 2 0 0 1 4 0a2 2 0 0 1 4 0M4 29a2 2 0 0 0 4 0a2 2 0 0 0 4 0a2 2 0 0 0 4 0a2 2 0 0 0 4 0a2 2 0 0 0 4 0a2 2 0 0 0 4 0a2 2 0 0 0 4 0"/><rect x="6" y="9.5" width="24" height="17" opacity=".45"/>'],
+  ['laurel','월계수','<rect x="3" y="3" width="30" height="30" opacity=".4"/><path d="M12.5 8.5Q14 14 18 14.5Q22 14 23.5 8.5"/><path d="M13.3 11l-2.2-.4M14.7 13l-1.8 1.1M22.7 11l2.2-.4M21.3 13l1.8 1.1" stroke-width="1.6"/>'],
+  ['sparkle','스파클','<rect x="4" y="4" width="28" height="28"/><rect x="7.5" y="7.5" width="21" height="21" opacity=".45"/><path d="M4 1v6M1 4h6M32 1v6M29 4h6M4 29v6M1 32h6M32 29v6M29 32h6" stroke-width=".9"/>'],
+  ['filigree','필리그리','<rect x="3" y="3" width="30" height="30" opacity=".4"/><path d="M6.5 14V8Q6.5 6.5 8 6.5H14M29.5 22v6q0 1.5-1.5 1.5H22"/><path d="M11 11.5h5M20 11.5h5" opacity=".8"/><path d="M18 10.3l1.2 1.2-1.2 1.2-1.2-1.2z"/>'],
+  ['classic','클래식','<rect x="3" y="3" width="30" height="30" opacity=".4"/><path d="M3 11Q3 3 11 3Q7.4 6 6 7.4Q3 11 3 11M33 25Q33 33 25 33Q28.6 30 30 28.6Q33 25 33 25" stroke-width="1.2"/>'],
+  ['line','얇은 선','<rect x="5" y="5" width="26" height="26"/>'],
+  ['double','이중선','<rect x="4" y="4" width="28" height="28"/><rect x="8.5" y="8.5" width="19" height="19" opacity=".55"/>'],
+  ['arch','아치','<path d="M8 32V16.5a10 10 0 0 1 20 0V32z"/>'],
+  ['none','없음','<rect x="5" y="5" width="26" height="26" stroke-dasharray="2 2.5" opacity=".55"/>'],
+];
 
-                    // 다운로드
-                    const link = document.createElement('a');
-                    link.download = 'wedding_invitation.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                }).catch(err => {
-                    // 에러 시 상태 복구
-                    node.style.transform = originalTransform;
-                    wrapper.style.animation = originalAnimation;
-                    editor.setAttribute('contenteditable', 'true');
-                });
-            });
-        }
-    </script>
+const EFFECTS = [
+  ['petal','꽃잎','살랑살랑 떨어지는 꽃잎','<path d="M8 2.5C11 4 12 8 8 13.5C4 8 5 4 8 2.5z" fill="currentColor" stroke="none"/>'],
+  ['heart','하트','천천히 내려오는 하트','<path d="M8 13C4 10.2 2.5 8.4 2.5 6.3A2.7 2.7 0 0 1 8 5a2.7 2.7 0 0 1 5.5 1.3c0 2.1-1.5 3.9-5.5 6.7z" fill="currentColor" stroke="none"/>'],
+  ['snow','눈송이','포근하게 내리는 눈','<g fill="currentColor" stroke="none"><circle cx="5" cy="5" r="1.4"/><circle cx="11" cy="7" r="1.8"/><circle cx="6.5" cy="11.5" r="1.2"/></g>'],
+  ['twinkle','반짝이','제자리에서 반짝이는 별','<path d="M8 2Q8.6 7.4 14 8Q8.6 8.6 8 14Q7.4 8.6 2 8Q7.4 7.4 8 2z" fill="currentColor" stroke="none"/>'],
+  ['bokeh','빛망울','천천히 떠오르는 빛','<circle cx="6" cy="9.5" r="3.5"/><circle cx="11" cy="5" r="2.3"/>'],
+  ['shine','빛 스치기','카드를 스치는 빛','<path d="M3 13L9.5 3M6.5 13L13 3"/><path d="M2 13h12" opacity=".5"/>'],
+];
+
+const DEFAULTS = {
+  html:null, watermark:'', calDate:'', theme:'blush', tFont:'pinyon', bFont:'notoserif', cFont:'cinzel', ornament:'baroque', ratio:'4:5', valign:'center',
+  textScale:100, lineH:100, shape:'arch', grain:true,
+  fx:{ petal:true, heart:false, snow:false, twinkle:false, bokeh:false, shine:false }, fxAmount:'1', fxSpeed:'10080',
+  fmt:'png', scale:3, gifSize:'640', ooc:null,
+};
+
+const OOC_DEFAULT = `*[OOC: 이전 RP 중지. 새로운 상황 전개. PC와 NPC는 결혼을 약속한 사이로 가정하고, 청첩장에 들어갈 문구를 작성한다. 결과에는 아래 항목을 모두 포함해서 출력한다. 문구는 두 사람의 관계성과 성격을 반영하여 작성하며, 담백한 표현 혹은 감정이 담긴 서술 등 다양한 톤을 선택할 수 있다. 또한, 청첩장의 전반적인 분위기(미니멀, 감성적, 격식 있는 등)와 디자인 방향에 대한 간단한 설명을 덧붙인다.
+· 신랑/신부 이름:
+· 결혼 날짜 및 시간:
+· 예식 장소:
+· 청첩장 문구:
+· 추가 안내 사항 (예: 피로연, 연락처 등):
+· 전체 분위기 및 컨셉:]*`;
+
+// 원본 틀 — 흐린 안내 글자만 있고, 쓰지 않은 칸은 이미지에 담기지 않음
+const TEMPLATE = [
+  ['caps',  'The Wedding Of'],
+  ['title', 'Groom & Bride'],
+  ['date',  'Date · Time'],
+  ['body',  'Venue'],
+  ['body',  'Hall · Floor'],
+  ['quote', 'A few words for your guests'],
+].map(([c, ph]) => `<div class="s-${c}" data-ph="${ph}"><br></div>`).join('');
+
+/* ───────── State ───────── */
+const KEY = 'invitation-v8';
+const FONTSET_MAP = { original:['pinyon','notoserif','cinzel'], vibes:['vibes','gowun','cormorant'], serif:['cormorant','notoserif','cormorant'], myeongjo:['myeongjo','myeongjo','cinzel'], batang:['gowun','gowun','cormorant'], sans:['dodum','pretendard','body'] };
+let state;
+try {
+  const saved = JSON.parse(localStorage.getItem(KEY));
+  if (saved) state = { ...DEFAULTS, ...saved, fx:{ ...DEFAULTS.fx, ...(saved.fx || {}) } };
+  else {
+    const old = JSON.parse(localStorage.getItem('invitation-v7') || 'null') || {};
+    state = { ...DEFAULTS, fx:{ ...DEFAULTS.fx, ...(old.fx || {}) } };
+    ['html','watermark','calDate','theme','ornament','ratio','valign','textScale','lineH','shape','grain','fxAmount','fxSpeed','fmt','scale','gifSize','ooc'].forEach(k => { if (k in old) state[k] = old[k]; });
+    if (old.fontSet && FONTSET_MAP[old.fontSet]) [state.tFont, state.bFont, state.cFont] = FONTSET_MAP[old.fontSet];
+  }
+} catch(e){ state = { ...DEFAULTS, fx:{ ...DEFAULTS.fx } }; }
+['momo-invitation-v2','wedding-invitation-v3','invitation-free-v4','invitation-v5','invitation-v6','invitation-v7'].forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
+function validate(s){
+  if (!THEMES[s.theme]) s.theme = DEFAULTS.theme;
+  if (!TF[s.tFont]) s.tFont = DEFAULTS.tFont;
+  if (!BF[s.bFont]) s.bFont = DEFAULTS.bFont;
+  if (!CF[s.cFont]) s.cFont = DEFAULTS.cFont;
+  if (!RATIOS[s.ratio]) s.ratio = DEFAULTS.ratio;
+  if (!FRAMES.some(f => f[0] === s.ornament)) s.ornament = DEFAULTS.ornament;
+  if (!['0.6','1','1.6'].includes(String(s.fxAmount))) s.fxAmount = DEFAULTS.fxAmount;
+  if (!['14000','10080','7040'].includes(String(s.fxSpeed))) s.fxSpeed = DEFAULTS.fxSpeed;
+  if (!['480','640','800'].includes(String(s.gifSize))) s.gifSize = DEFAULTS.gifSize;
+  if (s.fmt === 'gif' && !Object.values(s.fx).some(Boolean)) s.fmt = 'png';
+  return s;
+}
+validate(state);
+
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch(e){ toast('브라우저 저장 공간이 부족해요 · ‘파일로 보관’을 써 주세요'); }
+  }, 400);
+}
+
+/* ───────── Helpers ───────── */
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+function rgba(hex, a){ const n = parseInt(hex.slice(1), 16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+const theme = () => THEMES[state.theme];
+const dims  = () => RATIOS[state.ratio];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const bodyFamily = () => `${BF[state.bFont].f}, ${KR_FB}`;
+
+function makeGrain(){
+  const c = document.createElement('canvas'); c.width = c.height = 140;
+  const x = c.getContext('2d'), img = x.createImageData(140, 140);
+  for (let i = 0; i < img.data.length; i += 4){ const v = Math.random()*255|0; img.data[i]=img.data[i+1]=img.data[i+2]=v; img.data[i+3]=Math.random()*16|0; }
+  x.putImageData(img, 0, 0); return c.toDataURL('image/png');
+}
+async function copyText(text){
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch(e){
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch(_){}
+    ta.remove(); return ok;
+  }
+}
+
+/* ───────── Frames (SVG) ───────── */
+const n1 = v => Math.round(v * 10) / 10;
+const star = (x, y, r) => `M${n1(x)} ${n1(y-r)}Q${n1(x+r*.16)} ${n1(y-r*.16)} ${n1(x+r)} ${n1(y)}Q${n1(x+r*.16)} ${n1(y+r*.16)} ${n1(x)} ${n1(y+r)}Q${n1(x-r*.16)} ${n1(y+r*.16)} ${n1(x-r)} ${n1(y)}Q${n1(x-r*.16)} ${n1(y-r*.16)} ${n1(x)} ${n1(y-r)}Z`;
+const mirror4 = (W, H, g) => `<g>${g}</g><g transform="translate(${W} 0) scale(-1 1)">${g}</g><g transform="translate(0 ${H}) scale(1 -1)">${g}</g><g transform="translate(${W} ${H}) scale(-1 -1)">${g}</g>`;
+const leaf = (x, y, deg, len, A) => `<path d="M0 0C${n1(len*.3)} ${n1(-len*.36)} ${n1(len*.72)} ${n1(-len*.36)} ${len} 0C${n1(len*.72)} ${n1(len*.36)} ${n1(len*.3)} ${n1(len*.36)} 0 0Z" transform="translate(${n1(x)} ${n1(y)}) rotate(${n1(deg)})" fill="${A}" fill-opacity=".22" stroke="${A}" stroke-width=".8"/>`;
+
+function ornamentSVG(W, H, t, kind){
+  const w = s => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none">${s}</svg>`;
+  const L = t.line, A = t.accent, C = t.card;
+
+  if (kind === 'baroque'){
+    const corner = `<g transform="translate(26 26)" stroke="${A}" stroke-width=".9" stroke-linecap="round">
+      <path d="M0 36C0 16 16 0 36 0"/>
+      <path d="M36 0C48 0 55 6 53 13C51.5 18 45 18 45.5 13.5C46 10.5 50 10.5 50 13.5"/>
+      <path d="M0 36C0 48 6 55 13 53C18 51.5 18 45 13.5 45.5C10.5 46 10.5 50 13.5 50"/>
+      <path d="M9 28C9 17.5 17.5 9 28 9" stroke-opacity=".45"/>
+      <path d="M28 9C33 9 35 13 32 15" stroke-opacity=".45"/><path d="M9 28C9 33 13 35 15 32" stroke-opacity=".45"/>
+      <path d="M3.5 3.5Q13 5.5 15.5 15.5Q5.5 13 3.5 3.5Z" fill="${A}" fill-opacity=".2"/>
+      <path d="M58 0H70M0 58V70" stroke-opacity=".5"/>
+      <circle cx="74" cy="0" r="1.1" fill="${A}" stroke="none"/><circle cx="0" cy="74" r="1.1" fill="${A}" stroke="none"/>
+    </g>`;
+    const mid = `<g transform="translate(${W/2} 17)" stroke="${A}" stroke-width=".9" stroke-linecap="round">
+      <rect x="-42" y="-4" width="84" height="8" fill="${C}" stroke="none"/>
+      <path d="M-36 0C-26 0-19-7-11-7C-5-7-1-3 0 1C1-3 5-7 11-7C19-7 26 0 36 0"/>
+      <path d="M-11-7C-7-3-3-2 0 1C3-2 7-3 11-7" stroke-opacity=".4"/>
+      <path d="${star(0, -9.5, 2.6)}" fill="${A}" stroke="none"/>
+      <circle cx="-39" cy="0" r="1.1" fill="${A}" stroke="none"/><circle cx="39" cy="0" r="1.1" fill="${A}" stroke="none"/>
+    </g>`;
+    return w(`<rect x="17" y="17" width="${W-34}" height="${H-34}" stroke="${L}" stroke-opacity=".9"/>` +
+      `<rect x="22.5" y="22.5" width="${W-45}" height="${H-45}" stroke="${L}" stroke-opacity=".45"/>` +
+      mirror4(W, H, corner) + mid + `<g transform="translate(0 ${H}) scale(1 -1)">${mid}</g>`);
+  }
+  if (kind === 'lace'){
+    const o = 20, d = 13;
+    const edge = (x1, y1, x2, y2) => {
+      const len = Math.hypot(x2 - x1, y2 - y1), n = Math.max(2, Math.round(len / d)), r = len / n / 2;
+      let p = '';
+      for (let i = 1; i <= n; i++) p += `A${n1(r)} ${n1(r)} 0 0 1 ${n1(x1 + (x2 - x1) * i / n)} ${n1(y1 + (y2 - y1) * i / n)}`;
+      return p;
+    };
+    const path = `M${o} ${o}` + edge(o, o, W-o, o) + edge(W-o, o, W-o, H-o) + edge(W-o, H-o, o, H-o) + edge(o, H-o, o, o);
+    return w(`<path d="${path}" stroke="${L}" stroke-width="1"/>` +
+      `<rect x="${o+5.5}" y="${o+5.5}" width="${W-2*o-11}" height="${H-2*o-11}" stroke="${L}" stroke-opacity=".7"/>` +
+      `<rect x="${o+10.5}" y="${o+10.5}" width="${W-2*o-21}" height="${H-2*o-21}" stroke="${A}" stroke-opacity=".35" stroke-dasharray="1 3.5" stroke-linecap="round"/>` +
+      mirror4(W, H, `<path d="${star(o + 17, o + 17, 4)}" fill="${A}"/>`));
+  }
+  if (kind === 'laurel'){
+    const cx = W / 2, cy = 58, R = 22;
+    let s = '';
+    const branch = (from, to) => {
+      const dir = to > from ? 1 : -1, steps = 6;
+      const P = a => [cx + R * Math.cos(a * Math.PI / 180), cy + R * Math.sin(a * Math.PI / 180)];
+      const [x1, y1] = P(from), [x2, y2] = P(to);
+      s += `<path d="M${n1(x1)} ${n1(y1)}A${R} ${R} 0 0 ${dir > 0 ? 1 : 0} ${n1(x2)} ${n1(y2)}" stroke="${A}" stroke-width=".9"/>`;
+      for (let i = 1; i <= steps; i++){
+        const a = from + (to - from) * i / steps, [x, y] = P(a), tan = a + dir * 90, len = 8.5 - i * .5;
+        s += leaf(x, y, tan - dir * 38, len, A) + leaf(x, y, tan + dir * 38, len * .9, A);
+      }
+    };
+    branch(100, 220); branch(80, -40);
+    s += `<circle cx="${cx}" cy="${cy + R + 1}" r="1.6" fill="${A}"/>`;
+    const sprig = `<g transform="translate(${cx} ${H - 40})" stroke="${A}" stroke-width=".9" stroke-linecap="round"><path d="M-42 0H-6M6 0H42"/>${leaf(-6, 0, 200, 9, A)}${leaf(-6, 0, 160, 9, A)}${leaf(6, 0, -20, 9, A)}${leaf(6, 0, 20, 9, A)}<circle r="1.6" fill="${A}" stroke="none"/></g>`;
+    return w(`<rect x="22.5" y="22.5" width="${W-45}" height="${H-45}" stroke="${L}"/>` + s + sprig);
+  }
+  if (kind === 'sparkle'){
+    const tiny = (x, y, r, o = .85) => `<path d="${star(x, y, r)}" fill="${A}" fill-opacity="${o}"/>`;
+    const corner = `<g><rect x="13" y="13" width="12" height="12" transform="rotate(45 19 19)" fill="${C}" stroke="${A}" stroke-width=".9"/>${tiny(19, 19, 3.6, 1)}</g>`;
+    return w(`<rect x="19" y="19" width="${W-38}" height="${H-38}" stroke="${A}" stroke-opacity=".9"/>` +
+      `<rect x="24.5" y="24.5" width="${W-49}" height="${H-49}" stroke="${L}"/>` +
+      `<rect x="29.5" y="29.5" width="${W-59}" height="${H-59}" stroke="${L}" stroke-opacity=".8" stroke-dasharray="1 3.5" stroke-linecap="round"/>` +
+      mirror4(W, H, corner) +
+      tiny(W/2, 19, 4) + tiny(W/2, H-19, 4) + tiny(W/2 - 13, 19, 1.8, .5) + tiny(W/2 + 13, 19, 1.8, .5) + tiny(W/2 - 13, H-19, 1.8, .5) + tiny(W/2 + 13, H-19, 1.8, .5));
+  }
+  if (kind === 'filigree'){
+    const corner = `<g transform="translate(31 31)" stroke="${A}" stroke-width=".9" stroke-linecap="round">
+      <path d="M0 40V7Q0 0 7 0H40"/>
+      <path d="M40 0C46 0 48 5 44.5 7C42 8.5 40 6 42 4.8"/><path d="M0 40C0 46 5 48 7 44.5C8.5 42 6 40 4.8 42"/>
+      <path d="M13 9L17 13L13 17L9 13Z" fill="${A}" fill-opacity=".3"/>
+      <path d="M6 22C6 13 13 6 22 6" stroke-opacity=".4"/>
+    </g>`;
+    const bar = y => { const l = Math.min(W * .19, 115);
+      return `<g transform="translate(${W/2} ${y})" stroke="${A}" stroke-width=".9" stroke-linecap="round">
+        <path d="M${-l} 0H-9M9 0H${l}"/><path d="M${-l+6} -3.2L${-l} 0L${-l+6} 3.2M${l-6} -3.2L${l} 0L${l-6} 3.2"/>
+        <path d="M0-4.5L4.5 0L0 4.5L-4.5 0Z" fill="${A}" fill-opacity=".35"/></g>`; };
+    return w(`<rect x="21" y="21" width="${W-42}" height="${H-42}" stroke="${L}"/>` + mirror4(W, H, corner) + bar(47) + bar(H - 47));
+  }
+  if (kind === 'classic'){
+    const fl = `<g transform="translate(20 20)" stroke="${A}" stroke-width="1.2" stroke-linecap="round"><path d="M0 46Q0 0 46 0Q28 14 14 28Q0 46 0 46"/><circle cx="14" cy="14" r="1.8" fill="${A}" stroke="none"/></g>`;
+    return w(`<rect x="20" y="20" width="${W-40}" height="${H-40}" stroke="${L}"/><rect x="27" y="27" width="${W-54}" height="${H-54}" stroke="${L}" stroke-dasharray="4 4" stroke-opacity=".6"/>` + mirror4(W, H, fl));
+  }
+  if (kind === 'line')   return w(`<rect x="24.5" y="24.5" width="${W-49}" height="${H-49}" stroke="${L}"/>`);
+  if (kind === 'double') return w(`<rect x="20.5" y="20.5" width="${W-41}" height="${H-41}" stroke="${L}"/><rect x="27.5" y="27.5" width="${W-55}" height="${H-55}" stroke="${L}" stroke-opacity=".6"/>`);
+  if (kind === 'arch'){
+    const i = 28, r = (W - 2*i) / 2, j = 34, r2 = (W - 2*j) / 2;
+    return w(`<path d="M${i} ${H-i}V${i+r}A${r} ${r} 0 0 1 ${W-i} ${i+r}V${H-i}Z" stroke="${L}"/><path d="M${j} ${H-j}V${j+r2}A${r2} ${r2} 0 0 1 ${W-j} ${j+r2}V${H-j}Z" stroke="${L}" stroke-opacity=".5"/><path d="${star(W/2, i, 4)}" fill="${A}"/>`);
+  }
+  return '';
+}
+
+/* ───────── Motion effects (screen + GIF share one seamless loop) ───────── */
+const FRAME_MS = 80;
+const loopMs = () => +state.fxSpeed;
+const loopFrames = () => Math.round(loopMs() / FRAME_MS);
+const TAU = Math.PI * 2;
+function rng(a){ return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const BASE_N = { petal:20, heart:11, snow:42, twinkle:18, bokeh:9 };
+const pCache = {};
+function particles(type){
+  const n = Math.round(BASE_N[type] * +state.fxAmount), key = type + n;
+  if (!pCache[key]){
+    const r = rng(type.length * 97 + 13);
+    pCache[key] = Array.from({ length:n }, (_, i) => ({
+      x: (i + r() * .85) / n, y: r(), s: r(), a: r(), ph: r(), ph2: r(),
+      sc: r() < .5 ? 1 : 2, rc: (r() < .5 ? -1 : 1) * (r() < .6 ? 1 : 2), fc: r() < .5 ? 1 : 2, c: r() < .6 ? 0 : 1, rot: r() * TAU,
+    }));
+  }
+  return pCache[key];
+}
+const fall = (p, t, H) => ((p.y + t) % 1) * (H + 40) - 20;
+
+function drawFx(ctx, W, H, t, k){
+  const th = theme(), fx = state.fx;
+  ctx.save(); ctx.scale(k, k);
+  if (fx.bokeh) particles('bokeh').forEach(p => {
+    const y = H + 40 - ((p.y + t * 2) % 1) * (H + 80), x = p.x * W + Math.sin(TAU * (t * 2 + p.ph)) * 18, r = 12 + p.s * 22;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r), c = th.dark ? '#ffffff' : th.petal[0];
+    g.addColorStop(0, rgba(c, th.dark ? .16 : .38)); g.addColorStop(.7, rgba(c, th.dark ? .08 : .18)); g.addColorStop(1, rgba(c, 0));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+  });
+  if (fx.snow) particles('snow').forEach(p => {
+    const y = fall(p, t, H), x = p.x * W + Math.sin(TAU * (t * p.sc + p.ph)) * 12, r = .9 + p.s * 2;
+    ctx.globalAlpha = .45 + p.a * .45; ctx.fillStyle = th.dark ? '#ffffff' : th.petal[0];
+    ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  const drop = (type, drawShape) => particles(type).forEach(p => {
+    const y = fall(p, t, H), x = p.x * W + Math.sin(TAU * (t * p.sc + p.ph)) * (10 + p.a * 20);
+    let flip = Math.cos(TAU * (t * p.fc + p.ph2)); flip = Math.sign(flip || 1) * Math.max(.25, Math.abs(flip));
+    ctx.save(); ctx.translate(x, y); ctx.rotate(p.rot + TAU * t * p.rc); ctx.scale(flip, 1);
+    ctx.globalAlpha = .55 + p.a * .4; drawShape(p, 4 + p.s * 5); ctx.restore();
+  });
+  if (fx.petal) drop('petal', (p, s) => {
+    const g = ctx.createLinearGradient(-s, -s, s, s); g.addColorStop(0, th.petal[p.c]); g.addColorStop(1, th.petal[1 - p.c]);
+    ctx.fillStyle = g; ctx.beginPath();
+    ctx.moveTo(0, -s); ctx.bezierCurveTo(s * .95, -s * .55, s * .75, s * .75, 0, s); ctx.bezierCurveTo(-s * .75, s * .75, -s * .95, -s * .55, 0, -s); ctx.fill();
+  });
+  if (fx.heart) drop('heart', (p, s) => {
+    ctx.fillStyle = th.dark ? '#ffffff' : (p.c ? th.petal[0] : th.accent); ctx.beginPath();
+    ctx.moveTo(0, s * .85); ctx.bezierCurveTo(-s * 1.35, 0, -s * .7, -s * 1.05, 0, -s * .35); ctx.bezierCurveTo(s * .7, -s * 1.05, s * 1.35, 0, 0, s * .85); ctx.fill();
+  });
+  if (fx.twinkle) particles('twinkle').forEach(p => {
+    const x = 30 + p.x * (W - 60), y = 30 + p.y * (H - 60), s = 3 + p.s * 4.5;
+    const v = Math.sin(TAU * (t * p.sc + p.ph)); if (v <= 0) return;
+    ctx.globalAlpha = v * v * (.6 + p.a * .4); ctx.fillStyle = th.dark ? '#ffffff' : th.accent;
+    ctx.save(); ctx.translate(x, y); ctx.scale(.6 + v * .4, .6 + v * .4);
+    ctx.beginPath(); ctx.moveTo(0, -s); ctx.quadraticCurveTo(s*.14, -s*.14, s, 0); ctx.quadraticCurveTo(s*.14, s*.14, 0, s); ctx.quadraticCurveTo(-s*.14, s*.14, -s, 0); ctx.quadraticCurveTo(-s*.14, -s*.14, 0, -s); ctx.fill();
+    ctx.restore();
+  });
+  ctx.globalAlpha = 1;
+  const ts = (t * 2) % 1;
+  if (fx.shine && ts < .5){
+    const u = ts / .5, span = W + H, x = -span * .35 + u * span * 1.2, bw = W * .32;
+    ctx.save(); ctx.translate(x, 0); ctx.rotate(.42);
+    const g = ctx.createLinearGradient(-bw / 2, 0, bw / 2, 0), tint = th.dark ? '#ffffff' : th.petal[0];
+    g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.35, rgba(tint, th.dark ? .06 : .16)); g.addColorStop(.5, `rgba(255,255,255,${th.dark ? .16 : .42})`); g.addColorStop(.65, rgba(tint, th.dark ? .06 : .16)); g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(-bw / 2, -H, bw, H * 3); ctx.restore();
+  }
+  ctx.restore();
+}
+const anyFx = () => Object.values(state.fx).some(Boolean);
+
+/* ───────── Elements ───────── */
+const app = $('#app'), stage = $('#stage'), canvasEl = $('#canvas'), scaler = $('#scaler'), tilt = $('#tilt');
+const card = $('#card'), editor = $('#editor'), content = $('.c-content', card), fcv = $('#fx-canvas');
+$('.c-grain', card).style.backgroundImage = `url(${makeGrain()})`;
+try { document.execCommand('defaultParagraphSeparator', false, 'div'); } catch(e){}
+
+// Palette cards
+Object.entries(THEMES).forEach(([k, t]) => {
+  const b = document.createElement('button');
+  b.className = 'pc'; b.dataset.k = 'theme'; b.dataset.v = k;
+  b.innerHTML = `<div class="pc-v" style="background:${t.card}"><i style="border-color:${t.line}"></i><b style="color:${t.title}">Love</b></div><small>${t.name}</small>`;
+  $('#pal').appendChild(b);
+});
+// Font lists
+function fontList(el, groups, key){
+  groups.forEach(([cat, list]) => {
+    const h = document.createElement('div'); h.className = 'fcat'; h.textContent = cat; el.appendChild(h);
+    list.forEach(fo => {
+      const b = document.createElement('button');
+      b.className = 'fr'; b.dataset.k = key; b.dataset.v = fo.id;
+      b.innerHTML = `<span class="fr-s"></span><small>${fo.name}</small>`;
+      const s = $('.fr-s', b);
+      s.style.fontFamily = `${fo.f}, ${KR_FB}`;
+      if (key === 'tFont'){ s.style.fontStyle = fo.style || 'normal'; s.style.fontWeight = fo.weight || 400; s.style.letterSpacing = fo.ls || 0; s.style.fontSize = Math.min(30, fo.size * (fo.ko ? 10 : 8.2)) + 'px'; }
+      else { s.style.fontWeight = fo.w || 400; s.style.fontSize = '15px'; }
+      el.appendChild(b);
+    });
+  });
+}
+fontList($('#tfonts'), TITLE_FONTS, 'tFont');
+fontList($('#bfonts'), BODY_FONTS, 'bFont');
+CAPS_FONTS.forEach(c => { const b = document.createElement('button'); b.dataset.k = 'cFont'; b.dataset.v = c.id; b.textContent = c.name; if (c.f) b.style.fontFamily = c.f; $('#cfonts').appendChild(b); });
+// Frames
+FRAMES.forEach(([k, name, icon]) => {
+  const b = document.createElement('button');
+  b.className = 'ft'; b.dataset.k = 'ornament'; b.dataset.v = k;
+  b.innerHTML = `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">${icon}</svg>${name}`;
+  $('#frames').appendChild(b);
+});
+// Effects
+EFFECTS.forEach(([k, name, desc, icon]) => {
+  const row = document.createElement('label');
+  row.className = 'fx'; row.dataset.fx = k;
+  row.innerHTML = `<span class="fx-ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">${icon}</svg></span>
+    <span class="fx-t"><b>${name}</b><small>${desc}</small></span><span class="sw"><input type="checkbox"><i></i></span>`;
+  $('input', row).addEventListener('change', e => { state.fx[k] = e.target.checked; if (!anyFx() && state.fmt === 'gif') state.fmt = 'png'; render(); save(); });
+  $('#fx-list').appendChild(row);
+});
+
+/* ───────── Render ───────── */
+let S = 1, rx = 0, ry = 0;
+
+function parseDate(v){ const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || ''); return m ? { y:+m[1], m:+m[2], d:+m[3] } : null; }
+function calHTML(){
+  const D = parseDate(state.calDate);
+  if (!D) return '<div class="cal-empty">도구 메뉴에서 달력 날짜를 골라 주세요</div>';
+  const first = new Date(D.y, D.m - 1, 1).getDay(), n = new Date(D.y, D.m, 0).getDate();
+  let g = ['S','M','T','W','T','F','S'].map(w => `<span class="d w">${w}</span>`).join('');
+  for (let i = 0; i < first; i++) g += '<span class="d"></span>';
+  for (let d = 1; d <= n; d++) g += d === D.d
+    ? `<span class="d on"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22"><path d="M12 21C5 15.5 1.5 12 1.5 7.5A5.3 5.3 0 0 1 12 5.6 5.3 5.3 0 0 1 22.5 7.5C22.5 12 19 15.5 12 21z" fill="${theme().accent}"/></svg><em>${d}</em></span>`
+    : `<span class="d">${d}</span>`;
+  return `<div class="cal-m">${MONTHS[D.m - 1]}</div><div class="cal-y">${D.y}</div><div class="cal-g">${g}</div>`;
+}
+function renderCals(){ editor.querySelectorAll('.s-cal').forEach(c => { const h = calHTML(); if (c.innerHTML !== h) c.innerHTML = h; }); }
+
+function updateFontSamples(){
+  const titleText = ([...editor.querySelectorAll('.s-title')].map(b => b.textContent.trim()).find(Boolean) || '').slice(0, 26);
+  $$('#tfonts .fr').forEach(b => { const fo = TF[b.dataset.v]; $('.fr-s', b).textContent = titleText || (fo.ko ? '신랑 & 신부' : 'Groom & Bride'); });
+  $$('#bfonts .fr').forEach(b => { $('.fr-s', b).textContent = '소중한 분들을 초대합니다'; });
+}
+
+function render(){
+  const t = theme(), tf = TF[state.tFont], [W, H, px, py] = dims();
+  const bFam = bodyFamily(), cf = CF[state.cFont];
+  card.style.width = W + 'px'; card.style.height = H + 'px';
+  const vars = {
+    '--c-card':t.card, '--c-glow':t.glow, '--c-text':t.text, '--c-muted':t.muted, '--c-title':t.title, '--c-accent':t.accent, '--c-line':t.line, '--c-sel':rgba(t.accent, .22),
+    '--pad-x':px+'px', '--pad-y':py+'px', '--valign':state.valign, '--lh':state.lineH / 100,
+    '--f-title':`${tf.f}, ${bFam}`, '--t-size':tf.size, '--t-size-ko':tf.ko ? tf.size : +(tf.size * .58).toFixed(2), '--t-style':tf.style || 'normal', '--t-weight':tf.weight || 400, '--t-ls':tf.ls || '0',
+    '--f-caps':cf.f ? `${cf.f}, ${bFam}` : bFam, '--f-body':bFam, '--body-w':BF[state.bFont].w || 400,
+  };
+  for (const k in vars) card.style.setProperty(k, vars[k]);
+  card.className = ['card', app.classList.contains('preview') ? '' : 'editing', state.grain ? 'has-grain' : '', t.dark ? 'dark' : '',
+    'o-' + state.ornament, 'shape-' + state.shape].filter(Boolean).join(' ');
+  $('.c-script', card).textContent = state.watermark || '';
+
+  const ok = [W, H, state.ornament, state.theme].join('|'), orn = $('.c-orn', card);
+  if (orn._k !== ok){ orn.innerHTML = ornamentSVG(W, H, t, state.ornament); orn._k = ok; }
+  if (fcv.width !== W * 2 || fcv.height !== H * 2){ fcv.width = W * 2; fcv.height = H * 2; }
+
+  stage.style.setProperty('--stage-bg', t.bg);
+  stage.style.setProperty('--stage-sub', rgba(t.dark ? '#3a4066' : t.text, .45));
+  stage.style.setProperty('--shadow', rgba(t.dark ? '#1d2552' : t.text, t.dark ? .5 : .35));
+  $('#dot-txt').style.background = t.text; $('#dot-acc').style.background = t.accent; $('#dot-mut').style.background = t.muted;
+  $('#tf-name').textContent = tf.name;
+  $('#bf-name').textContent = BF[state.bFont].name;
+  $('#ts-val').textContent = state.textScale + '%';
+  $('#lh-val').textContent = state.lineH + '%';
+  $$('#fx-list .fx').forEach(r => { const on = !!state.fx[r.dataset.fx]; r.classList.toggle('on', on); $('input', r).checked = on; });
+
+  const gif = state.fmt === 'gif', gs = gifScale();
+  $('#scale-seg').style.display = gif ? 'none' : '';
+  $('#gif-seg').style.display = gif ? '' : 'none';
+  $('#size-lb').textContent = gif ? 'GIF 크기' : '해상도';
+  $('#save-note').textContent = gif
+    ? `${Math.round(W * gs)} × ${Math.round(H * gs)}px · ${(loopMs() / 1000).toFixed(1)}초 반복 · 켜 둔 효과가 모두 담겨요`
+    : `${W * state.scale} × ${H * state.scale}px`;
+  $('#dl-label').textContent = gif ? 'GIF 다운로드' : `${state.fmt.toUpperCase()} 다운로드`;
+
+  $$('[data-k]').forEach(el => {
+    const v = state[el.dataset.k];
+    if (el.tagName === 'BUTTON') el.classList.toggle('on', String(v) === el.dataset.v);
+    else if (el.type === 'checkbox') el.checked = !!v;
+    else if (el !== document.activeElement) el.value = v;
+  });
+
+  renderCals();
+  refresh();
+  layoutStage();
+}
+
+function isEmpty(){ return !editor.textContent.trim() && !editor.querySelector('.s-photo,.s-rule,.s-cal'); }
+function updateCap(){
+  const [W, H] = dims();
+  $('#cap').textContent = isEmpty() ? '흐린 글자를 눌러 바로 적어 보세요' : `${state.ratio}  ·  ${W} × ${H}`;
+}
+function fitEl(ed, box){
+  let fs = state.textScale / 100;
+  ed.style.setProperty('--fs', fs);
+  for (let i = 0; i < 40 && ed.scrollHeight > box.clientHeight && fs > .4; i++){ fs -= .02; ed.style.setProperty('--fs', fs.toFixed(3)); }
+}
+function refresh(){ fitEl(editor, content); updateCap(); }
+
+function layoutStage(){
+  const [W, H] = dims(), cs = getComputedStyle(canvasEl);
+  const aw = canvasEl.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const ah = canvasEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  S = Math.max(.1, Math.min(.9, aw / W, ah / H));
+  scaler.style.width = W * S + 'px'; scaler.style.height = H * S + 'px';
+  tilt.style.width = W + 'px'; tilt.style.height = H + 'px';
+  applyTilt();
+}
+function applyTilt(){ tilt.style.transform = `translate(-50%,-50%) scale(${S}) rotateX(${rx}deg) rotateY(${ry}deg)`; }
+
+let fxDirty = true;
+(function loop(now){
+  const on = anyFx() && !document.hidden;
+  if (on || fxDirty){
+    const ctx = fcv.getContext('2d');
+    ctx.clearRect(0, 0, fcv.width, fcv.height);
+    if (on){ const [W, H] = dims(); drawFx(ctx, W, H, (now % loopMs()) / loopMs(), 2); }
+    fxDirty = on;
+  }
+  requestAnimationFrame(loop);
+})(0);
+
+/* ───────── Navigation / panel events ───────── */
+function openPane(name){
+  $$('.rb').forEach(b => b.classList.toggle('on', b.dataset.go === name));
+  $$('.pane').forEach(p => p.classList.toggle('on', p.dataset.pane === name));
+  $('#panel').scrollTop = 0;
+  if (name === 'type'){
+    updateFontSamples();
+    $$('.fl .fr.on').forEach(b => { const l = b.parentElement; l.scrollTop = b.offsetTop - l.clientHeight / 2 + b.offsetHeight / 2; });
+  }
+}
+$$('.rb').forEach(b => b.addEventListener('click', () => openPane(b.dataset.go)));
+
+$$('[data-k]').forEach(el => {
+  const k = el.dataset.k;
+  if (el.tagName === 'BUTTON') el.addEventListener('click', () => {
+    state[k] = k === 'scale' ? +el.dataset.v : el.dataset.v;
+    if (k === 'fmt' && el.dataset.v === 'gif' && !anyFx()){ state.fx.petal = true; toast('GIF를 위해 꽃잎 효과를 켰어요'); }
+    render(); save();
+  });
+  else el.addEventListener('input', () => {
+    state[k] = el.type === 'checkbox' ? el.checked : el.type === 'range' ? +el.value : el.value;
+    render(); save();
+  });
+});
+
+const pop = $('#save-pop');
+$('#btn-save').addEventListener('click', e => { e.stopPropagation(); pop.classList.toggle('on'); });
+document.addEventListener('mousedown', e => { if (pop.classList.contains('on') && !pop.contains(e.target) && !e.target.closest('#btn-save')) pop.classList.remove('on'); });
+
+/* ───────── Editor ───────── */
+const STYLES = ['s-title','s-caps','s-date','s-body','s-quote','s-small'];
+const BLOCKS = /\bs-(title|caps|date|body|quote|small|rule|photo|cal)\b/;
+const ATOMS = '.s-rule,.s-photo,.s-cal';
+
+function sanitize(html){
+  const doc = new DOMParser().parseFromString(`<div>${html || ''}</div>`, 'text/html');
+  const root = doc.body.firstChild;
+  root.querySelectorAll('script,style,iframe,object,embed,link,meta,img,svg,canvas').forEach(n => n.remove());
+  root.querySelectorAll('*').forEach(el => {
+    [...el.attributes].forEach(a => {
+      const n = a.name.toLowerCase();
+      if (n === 'class' || n === 'data-ph') return;
+      if (n === 'contenteditable' && el.matches(ATOMS)) return;
+      if (n === 'style' && el.classList.contains('s-photo') && /^background-image:\s*url\("?data:image\/[a-z]+;base64,[A-Za-z0-9+/=]+"?\);?$/.test(a.value.trim())) return;
+      el.removeAttribute(a.name);
+    });
+  });
+  return root.innerHTML;
+}
+
+function blockOf(node){ while (node && node.parentNode !== editor) node = node.parentNode; return node && node.nodeType === 1 ? node : null; }
+
+function normalize(){
+  const sel = getSelection();
+  const an = sel.rangeCount ? sel.anchorNode : null, ao = sel.anchorOffset;
+  let buf = null;
+  [...editor.childNodes].forEach(n => {
+    if (n.nodeType === 1 && n.tagName === 'DIV'){ buf = null; if (!BLOCKS.test(n.className)) n.classList.add('s-body'); return; }
+    if (n.nodeType === 3 && !n.textContent.trim() && !buf){ n.remove(); return; }
+    if (!buf){ buf = document.createElement('div'); buf.className = 's-body'; n.before(buf); }
+    buf.appendChild(n);
+  });
+  editor.querySelectorAll('[style]').forEach(el => { if (!el.classList.contains('s-photo')) el.removeAttribute('style'); });
+  editor.querySelectorAll(':scope > div:not(.s-cal) span:not([class]), :scope > div font:not([color="#010101"]):not([color="#020202"]):not([color="#030303"])').forEach(el => el.replaceWith(...el.childNodes));
+  editor.querySelectorAll(':scope > div div').forEach(el => { if (!el.closest(ATOMS)) el.replaceWith(...el.childNodes, document.createElement('br')); });
+  editor.querySelectorAll(':scope > .s-rule').forEach(r => { if (r.innerHTML !== '<i></i><b></b><i></i>') r.innerHTML = '<i></i><b></b><i></i>'; r.contentEditable = 'false'; });
+  editor.querySelectorAll(':scope > .s-photo, :scope > .s-cal').forEach(r => r.contentEditable = 'false');
+  if (!editor.children.length) editor.innerHTML = '<div class="s-body"><br></div>';
+  const seen = new Set();
+  [...editor.children].forEach(b => {
+    const ph = b.getAttribute('data-ph');
+    if (ph){ if (seen.has(ph)) b.removeAttribute('data-ph'); else seen.add(ph); }
+    b.classList.toggle('ph-empty', !!b.getAttribute('data-ph') && !b.textContent.trim());
+    if (b.classList.contains('s-title')) b.classList.toggle('hangul', /[ㄱ-ㅎ가-힣]/.test(b.textContent));
+    else b.classList.remove('hangul');
+  });
+  if (an && editor.contains(an) && document.activeElement === editor){
+    try { const r = document.createRange(); r.setStart(an, Math.min(ao, an.nodeType === 3 ? an.length : an.childNodes.length)); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); } catch(e){}
+  }
+}
+
+function commit(){
+  normalize();
+  state.html = editor.innerHTML;
+  refresh(); syncToolbar(); save();
+  if ($('[data-pane=type]').classList.contains('on')) updateFontSamples();
+}
+
+let lastRange = null;
+function inEditor(){ const s = getSelection(); return s.rangeCount && editor.contains(s.getRangeAt(0).commonAncestorContainer); }
+function setCaret(node, atStart){ editor.focus(); const r = document.createRange(); r.selectNodeContents(node); r.collapse(!!atStart); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+function placeEnd(){ setCaret(editor.lastElementChild || editor, false); }
+function ensureSel(){
+  if (inEditor()) return;
+  editor.focus();
+  if (lastRange && editor.contains(lastRange.startContainer)){ const s = getSelection(); s.removeAllRanges(); s.addRange(lastRange); }
+  else placeEnd();
+}
+function selectedBlocks(){
+  const s = getSelection(); if (!s.rangeCount) return [];
+  const r = s.getRangeAt(0);
+  let list = r.collapsed ? [] : [...editor.children].filter(b => r.intersectsNode(b));
+  if (!list.length){
+    let b = blockOf(r.startContainer);
+    if (!b && r.startContainer === editor) b = editor.children[Math.min(r.startOffset, editor.children.length - 1)];
+    if (b) list = [b];
+  }
+  return list;
+}
+
+editor.addEventListener('input', e => {
+  if (e.inputType === 'insertParagraph'){
+    const b = blockOf(getSelection().anchorNode);
+    if (b && !b.textContent.trim() && b.matches('.s-title,.s-caps,.s-date')){ STYLES.forEach(c => b.classList.remove(c)); b.classList.add('s-body'); }
+  }
+  commit();
+});
+// 틀의 빈 칸 끝에서 Enter → 새 줄을 만들지 않고 다음 빈 칸으로 이동
+editor.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+  const sel = getSelection(); if (!sel.rangeCount || !sel.isCollapsed) return;
+  const b = blockOf(sel.anchorNode), next = b && b.nextElementSibling;
+  if (!b || !next || !next.classList.contains('ph-empty')) return;
+  const r = document.createRange(); r.selectNodeContents(b); r.setStart(sel.anchorNode, sel.anchorOffset);
+  if (r.toString().trim() !== '') return;
+  e.preventDefault(); setCaret(next, true); syncToolbar();
+});
+editor.addEventListener('paste', e => { e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text/plain')); });
+editor.addEventListener('drop', e => e.preventDefault());
+
+let picked = null;
+function pick(el){ if (picked) picked.classList.remove('sel'); picked = el; if (el) el.classList.add('sel'); }
+editor.addEventListener('mousedown', e => { const blk = e.target.closest(ATOMS); pick(blk && !app.classList.contains('preview') ? blk : null); });
+document.addEventListener('keydown', e => {
+  const ae = document.activeElement;
+  if (picked && ae !== editor && ae !== document.body){ pick(null); return; }
+  if (picked && (e.key === 'Backspace' || e.key === 'Delete')){
+    e.preventDefault();
+    const next = picked.nextElementSibling || picked.previousElementSibling;
+    picked.remove(); picked = null; commit();
+    if (next) setCaret(next, false);
+  } else if (picked && !e.metaKey && !e.ctrlKey && e.key.length === 1) pick(null);
+});
+card.addEventListener('mousedown', e => {
+  if (app.classList.contains('preview') || editor.contains(e.target)) return;
+  e.preventDefault(); placeEnd();
+});
+document.addEventListener('selectionchange', () => { if (inEditor()){ lastRange = getSelection().getRangeAt(0).cloneRange(); syncToolbar(); } });
+
+/* Toolbar */
+const toolbar = $('#toolbar');
+toolbar.addEventListener('mousedown', e => { if (e.target.closest('.tb')) e.preventDefault(); });
+function syncToolbar(){
+  const sel = getSelection(), inside = inEditor();
+  const b = inside ? blockOf(sel.anchorNode) : null;
+  $$('[data-style]', toolbar).forEach(x => x.classList.toggle('on', !!b && b.classList.contains('s-' + x.dataset.style)));
+  const al = b ? (b.classList.contains('a-left') ? 'left' : b.classList.contains('a-right') ? 'right' : 'center') : '';
+  $$('[data-align]', toolbar).forEach(x => x.classList.toggle('on', x.dataset.align === al));
+  const el = inside ? (sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentElement) : null;
+  $('[data-cmd=bold]', toolbar).classList.toggle('on', !!el && !!el.closest('#editor b, #editor strong'));
+  $('[data-cmd=italic]', toolbar).classList.toggle('on', !!el && !!el.closest('#editor i, #editor em'));
+}
+$$('[data-style]', toolbar).forEach(btn => btn.addEventListener('click', () => {
+  ensureSel();
+  selectedBlocks().forEach(b => { if (b.matches(ATOMS)) return; STYLES.forEach(c => b.classList.remove(c)); b.classList.add('s-' + btn.dataset.style); });
+  commit();
+}));
+$$('[data-align]', toolbar).forEach(btn => btn.addEventListener('click', () => {
+  ensureSel();
+  selectedBlocks().forEach(b => { b.classList.remove('a-left', 'a-right'); if (btn.dataset.align !== 'center') b.classList.add('a-' + btn.dataset.align); });
+  commit();
+}));
+$$('[data-cmd]', toolbar).forEach(btn => btn.addEventListener('click', () => { ensureSel(); document.execCommand(btn.dataset.cmd); commit(); }));
+
+const COLOR_MARK = { txt:'#010101', acc:'#020202', mut:'#030303' };
+const COLOR_CLASS = { '#010101':'c-txt', '#020202':'c-acc', '#030303':'c-mut' };
+$$('[data-color]', toolbar).forEach(btn => btn.addEventListener('click', () => {
+  ensureSel();
+  if (getSelection().isCollapsed){ toast('색을 바꿀 글자를 먼저 드래그해 주세요'); return; }
+  try { document.execCommand('styleWithCSS', false, false); } catch(e){}
+  document.execCommand('foreColor', false, COLOR_MARK[btn.dataset.color]);
+  editor.querySelectorAll('font[color]').forEach(f => {
+    const cls = COLOR_CLASS[(f.getAttribute('color') || '').toLowerCase()];
+    if (!cls) return;
+    const sp = document.createElement('span'); sp.className = cls;
+    while (f.firstChild) sp.appendChild(f.firstChild);
+    f.replaceWith(sp);
+    sp.querySelectorAll('.c-txt,.c-acc,.c-mut').forEach(x => x.replaceWith(...x.childNodes));
+  });
+  commit();
+}));
+
+function insertBlock(el){
+  ensureSel();
+  const cur = selectedBlocks().pop();
+  const empty = cur && !cur.textContent.trim() && !cur.matches(ATOMS) && !cur.getAttribute('data-ph');
+  if (cur) cur.after(el); else editor.appendChild(el);
+  if (empty) cur.remove();
+  const nb = document.createElement('div'); nb.className = 's-body'; nb.innerHTML = '<br>';
+  el.after(nb); setCaret(nb, true);
+  commit();
+}
+function atom(cls, html){ const d = document.createElement('div'); d.className = cls; d.contentEditable = 'false'; d.innerHTML = html || ''; return d; }
+$('#tb-rule').addEventListener('click', () => insertBlock(atom('s-rule', '<i></i><b></b><i></i>')));
+$('#tb-cal').addEventListener('click', () => {
+  insertBlock(atom('s-cal', calHTML()));
+  if (!state.calDate){ openPane('tools'); const i = $('input[data-k=calDate]'); setTimeout(() => { i.focus(); try { i.showPicker(); } catch(e){} }, 250); }
+});
+
+const photoInput = $('#photo-input');
+$('#tb-photo').addEventListener('click', () => { ensureSel(); lastRange = getSelection().getRangeAt(0).cloneRange(); photoInput.click(); });
+photoInput.addEventListener('change', () => {
+  const file = photoInput.files[0]; photoInput.value = '';
+  if (!file) return;
+  const url = URL.createObjectURL(file), img = new Image();
+  img.onload = () => {
+    const r = Math.min(1, 1200 / Math.max(img.width, img.height));
+    const c = document.createElement('canvas'); c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url);
+    const d = atom('s-photo'); d.style.backgroundImage = `url("${c.toDataURL('image/jpeg', .85)}")`;
+    if (lastRange){ editor.focus(); const s = getSelection(); s.removeAllRanges(); s.addRange(lastRange); }
+    insertBlock(d);
+  };
+  img.onerror = () => toast('이미지를 열 수 없어요');
+  img.src = url;
+});
+
+/* ───────── Wording helper (OOC) ───────── */
+const modal = $('#ooc-modal'), oocText = $('#ooc-text');
+function openOoc(){ oocText.value = state.ooc || OOC_DEFAULT; modal.classList.add('on'); }
+function closeOoc(){ modal.classList.remove('on'); }
+$('#btn-ooc-open').addEventListener('click', openOoc);
+$$('[data-close]', modal).forEach(b => b.addEventListener('click', closeOoc));
+modal.addEventListener('mousedown', e => { if (e.target === modal) closeOoc(); });
+oocText.addEventListener('input', () => { state.ooc = oocText.value === OOC_DEFAULT ? null : oocText.value; save(); });
+$('#ooc-reset').addEventListener('click', () => { oocText.value = OOC_DEFAULT; state.ooc = null; save(); });
+$('#ooc-copy').addEventListener('click', async () => toast(await copyText(oocText.value) ? 'OOC 프롬프트를 복사했어요' : '복사하지 못했어요'));
+$('#btn-ooc-quick').addEventListener('click', async () => toast(await copyText(state.ooc || OOC_DEFAULT) ? 'OOC 프롬프트를 복사했어요' : '복사하지 못했어요'));
+
+const FIELDS = [
+  ['names',   /신랑\s*[\/·&,]?\s*신부\s*(?:의\s*)?이름/],
+  ['date',    /결혼\s*(?:날짜|일시)(?:\s*및\s*시간)?/],
+  ['venue',   /예식\s*장소/],
+  ['message', /청첩장\s*문구/],
+  ['extra',   /추가\s*안내(?:\s*사항)?(?:\s*[\(（][^)）]*[\)）])?/],
+  ['concept', /(?:전체\s*)?분위기(?:\s*및\s*(?:컨셉|콘셉트))?/],
+];
+function parseResult(text){
+  const hits = [];
+  FIELDS.forEach(([key, re]) => {
+    // 줄 맨 앞(· - ** 등 기호 허용)에 있고 뒤에 콜론이 붙은 항목 이름만 인식
+    const full = new RegExp('(?:^|\\n)[ \\t>#*_]*(?:[·•\\-–][ \\t]*)?(?:\\*\\*)?[ \\t]*(?:' + re.source + ')[ \\t]*(?:\\*\\*)?[ \\t]*[:：]');
+    const m = full.exec(text);
+    if (m) hits.push({ key, start:m.index, end:m.index + m[0].length });
+  });
+  hits.sort((a, b) => a.start - b.start);
+  const out = {};
+  hits.forEach((h, i) => {
+    let v = text.slice(h.end, i + 1 < hits.length ? hits[i + 1].start : text.length);
+    v = v.replace(/^[\s*_:：\-–]+/, '').replace(/[\s·•\-*_\]]+$/, '');
+    v = v.split('\n').map(l => l.replace(/^\s*(?:[·•\-–]\s*)?(?:\*\*)?/, '').replace(/\*\*/g, '').replace(/^["“”']+|["“”']+$/g, '').trim()).join('\n').trim();
+    if (v) out[h.key] = v;
+  });
+  return out;
+}
+const linesHTML = s => s.split('\n').map(l => esc(l)).join('<br>');
+let undoHtml = null;
+$('#ooc-fill').addEventListener('click', () => {
+  const data = parseResult($('#ooc-result').value);
+  if (!data.names && !data.date && !data.venue && !data.message){ toast('항목을 찾지 못했어요 · ‘· 신랑/신부 이름:’ 형식인지 확인해 주세요'); return; }
+  undoHtml = editor.innerHTML;
+  const names = data.names ? data.names.replace(/\n+/g, ' ').replace(/(신랑|신부)\s*[:：]?\s*/g, '').replace(/\s*[\/|,]\s*/g, ' & ').replace(/\s{2,}/g, ' ').trim() : '';
+  let html = `<div class="s-caps" data-ph="The Wedding Of"><br></div>`;
+  html += `<div class="s-title" data-ph="Groom &amp; Bride">${names ? esc(names) : '<br>'}</div>`;
+  html += `<div class="s-date" data-ph="Date · Time">${data.date ? linesHTML(data.date) : '<br>'}</div>`;
+  html += `<div class="s-body" data-ph="Venue">${data.venue ? linesHTML(data.venue) : '<br>'}</div>`;
+  if (data.message) html += `<div class="s-rule" contenteditable="false"><i></i><b></b><i></i></div>` + data.message.split(/\n{2,}/).map(p => `<div class="s-body">${linesHTML(p)}</div>`).join('<div class="s-body"><br></div>');
+  if (data.extra) html += `<div class="s-body"><br></div><div class="s-small">${linesHTML(data.extra)}</div>`;
+  editor.innerHTML = html; normalize(); commit();
+
+  let note = '카드에 채웠어요';
+  if ($('#ooc-theme').checked && data.concept){
+    const pickT = [
+      [/네이비|밤|별|격식|포멀|클래식|품격|우아/, 'navy', 'filigree', 'cormorant', 'notoserif'],
+      [/로맨틱|러블리|사랑스|핑크|달콤/, 'rose', 'sparkle', 'vibes', 'gowun'],
+      [/미니멀|심플|담백|깔끔|모던/, 'ivory', 'line', 'diphylleia', 'notoserif'],
+      [/라벤더|보라|몽환/, 'lilac', 'lace', 'allura', 'gowun'],
+      [/블루|하늘|바다|청량|여름/, 'blue', 'laurel', 'pinyon', 'hahmlet'],
+      [/그린|초록|숲|정원|자연|가든/, 'sage', 'laurel', 'parisienne', 'gowun'],
+      [/브라운|커피|가을|앤틱|빈티지/, 'mocha', 'classic', 'alex', 'myeongjo'],
+      [/감성|따뜻|봄|꽃|골드/, 'blush', 'baroque', 'pinyon', 'notoserif'],
+    ].find(([re]) => re.test(data.concept));
+    if (pickT){ [, state.theme, state.ornament, state.tFont, state.bFont] = pickT; note = `카드에 채우고 ${THEMES[state.theme].name} 디자인을 적용했어요`; }
+  }
+  render(); save();
+  $('#ooc-undo').style.display = '';
+  toast(note);
+});
+$('#ooc-undo').addEventListener('click', () => {
+  if (undoHtml == null) return;
+  editor.innerHTML = undoHtml; undoHtml = null; normalize(); commit();
+  $('#ooc-undo').style.display = 'none'; toast('되돌렸어요');
+});
+
+$('#btn-copy-text').addEventListener('click', async () => {
+  const text = [...editor.children].filter(b => !b.matches(ATOMS)).map(b => b.innerText.replace(/\n+$/, '').trim()).join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  if (!text){ toast('아직 쓴 글이 없어요'); return; }
+  toast(await copyText(text) ? '카드 글을 복사했어요' : '복사하지 못했어요');
+});
+
+/* ───────── Preview ───────── */
+function setPreview(on){
+  app.classList.toggle('preview', on);
+  rx = ry = 0;
+  editor.contentEditable = on ? 'false' : 'true';
+  pick(null);
+  if (on) getSelection().removeAllRanges();
+  render();
+}
+$('#btn-preview').addEventListener('click', () => setPreview(!app.classList.contains('preview')));
+$('#btn-exit').addEventListener('click', () => setPreview(false));
+document.addEventListener('mousemove', e => {
+  if (!app.classList.contains('preview')) return;
+  ry = (e.clientX / innerWidth - .5) * 6; rx = -(e.clientY / innerHeight - .5) * 6; applyTilt();
+});
+
+/* ───────── Export ───────── */
+function busy(on, text, pct){
+  const b = $('#busy'); b.classList.toggle('on', on);
+  if (text) $('#busy-text').textContent = text;
+  b.classList.toggle('ind', pct == null);
+  $('#busy-bar').style.width = pct == null ? '30%' : Math.round(pct * 100) + '%';
+}
+let toastTimer;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2400); }
+const gifScale = () => Math.min(1.3, +state.gifSize / Math.max(...dims().slice(0, 2)));
+
+async function renderCanvas(scale){
+  pick(null);
+  await document.fonts.ready;
+  const [W, H] = dims();
+  const copy = card.cloneNode(true);
+  copy.classList.remove('editing'); copy.removeAttribute('id');
+  copy.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+  copy.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+  const host = document.createElement('div');
+  host.style.cssText = `position:fixed;left:0;top:0;width:${W}px;height:${H}px;z-index:-1;pointer-events:none`;
+  host.appendChild(copy); document.body.appendChild(host);
+  fitEl($('.editor', copy), $('.c-content', copy));
+  try {
+    return await html2canvas(copy, { scale, useCORS:true, logging:false, backgroundColor:theme().card,
+      windowWidth:Math.max(innerWidth, W + 20), windowHeight:Math.max(innerHeight, H + 20) });
+  } finally { host.remove(); }
+}
+const toBlob = (cv, type='image/png') => new Promise(r => cv.toBlob(r, type, .95));
+function download(blob, name){
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+async function makeGif(){
+  const lib = await import('https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js');
+  const [W, H] = dims(), k = gifScale(), N = loopFrames();
+  const base = await renderCanvas(k);
+  const w = base.width, h = base.height;
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+  const ctx = cv.getContext('2d', { willReadFrequently:true });
+  const frame = i => { ctx.drawImage(base, 0, 0); drawFx(ctx, W, H, i / N, w / W); return ctx.getImageData(0, 0, w, h).data; };
+  // 공통 팔레트 한 장 + 투명색 한 칸 → 바뀐 부분만 저장해서 용량을 줄임
+  const sample = new Uint8ClampedArray(w * h * 4 * 3);
+  [0, N / 3 | 0, 2 * N / 3 | 0].forEach((f, j) => sample.set(frame(f === 0 && state.fx.shine ? N / 8 | 0 : f), w * h * 4 * j));
+  const palette = lib.quantize(sample, 255, { format:'rgb565' });
+  palette.push([1, 254, 3]);
+  const TI = palette.length - 1;
+  const gif = lib.GIFEncoder();
+  let prev = null;
+  for (let i = 0; i < N; i++){
+    const idx = lib.applyPalette(frame(i), palette, 'rgb565');
+    if (!prev) gif.writeFrame(idx, w, h, { palette, delay:FRAME_MS, repeat:0 });
+    else {
+      const out = new Uint8Array(idx);
+      for (let p = 0; p < out.length; p++) if (idx[p] === prev[p]) out[p] = TI;
+      gif.writeFrame(out, w, h, { delay:FRAME_MS, transparent:true, transparentIndex:TI, dispose:1 });
+    }
+    prev = idx;
+    if (i % 4 === 3){ busy(true, 'GIF를 만드는 중…', (i + 1) / N); await new Promise(r => setTimeout(r)); }
+  }
+  gif.finish();
+  return new Blob([gif.bytes()], { type:'image/gif' });
+}
+
+async function downloadImage(){
+  pop.classList.remove('on');
+  const gif = state.fmt === 'gif';
+  busy(true, gif ? 'GIF를 만드는 중…' : '이미지를 만드는 중…', gif ? 0 : null);
+  try {
+    if (gif) download(await makeGif(), 'invitation.gif');
+    else {
+      const jpg = state.fmt === 'jpg';
+      download(await toBlob(await renderCanvas(state.scale), jpg ? 'image/jpeg' : 'image/png'), `invitation.${jpg ? 'jpg' : 'png'}`);
+    }
+    toast(gif ? 'GIF를 저장했어요' : '이미지를 저장했어요');
+  } catch(e){ console.error(e); toast('저장하지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요'); }
+  finally { busy(false); }
+}
+$('#btn-download').addEventListener('click', downloadImage);
+
+$('#btn-copy').addEventListener('click', async () => {
+  pop.classList.remove('on');
+  if (!navigator.clipboard || !window.ClipboardItem){ toast('이 브라우저는 이미지 복사를 지원하지 않아요'); return; }
+  busy(true, '이미지를 만드는 중…');
+  try { await navigator.clipboard.write([new ClipboardItem({ 'image/png': renderCanvas(state.scale).then(cv => toBlob(cv)) })]); toast('이미지를 복사했어요'); }
+  catch(e){ console.error(e); toast('복사하지 못했어요'); }
+  finally { busy(false); }
+});
+
+$('#btn-proj-save').addEventListener('click', () => {
+  download(new Blob([JSON.stringify({ app:'invitation', v:8, state }, null, 2)], { type:'application/json' }), 'invitation.json');
+  toast('파일로 보관했어요');
+});
+const projInput = $('#proj-input');
+$('#btn-proj-load').addEventListener('click', () => projInput.click());
+projInput.addEventListener('change', async () => {
+  const file = projInput.files[0]; projInput.value = '';
+  if (!file) return;
+  try {
+    const s = JSON.parse(await file.text()).state || {};
+    const next = { ...DEFAULTS, fx:{ ...DEFAULTS.fx } };
+    Object.keys(DEFAULTS).forEach(k => { if (k in s) next[k] = k === 'fx' ? { ...DEFAULTS.fx, ...s.fx } : s[k]; });
+    if (s.fontSet && FONTSET_MAP[s.fontSet] && !s.tFont) [next.tFont, next.bFont, next.cFont] = FONTSET_MAP[s.fontSet];
+    validate(next);
+    next.html = next.html == null ? null : sanitize(next.html);
+    state = next; editor.innerHTML = state.html == null ? TEMPLATE : state.html; normalize(); render(); save();
+    toast('불러왔어요');
+  } catch(e){ toast('불러올 수 없는 파일이에요'); }
+});
+$('#btn-reset').addEventListener('click', () => {
+  if (!confirm('쓴 내용을 지우고 처음 틀로 되돌릴까요?')) return;
+  editor.innerHTML = TEMPLATE; normalize(); commit(); render();
+});
+
+addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); downloadImage(); }
+  if (e.key === 'Escape'){
+    if (modal.classList.contains('on')) closeOoc();
+    else if (pop.classList.contains('on')) pop.classList.remove('on');
+    else if (app.classList.contains('preview')) setPreview(false);
+  }
+});
+
+/* ───────── Start ───────── */
+editor.innerHTML = state.html == null ? TEMPLATE : sanitize(state.html);
+normalize();
+new ResizeObserver(() => layoutStage()).observe(canvasEl);
+if (document.fonts){ document.fonts.ready.then(() => refresh()); document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', () => refresh()); }
+render();
+if (matchMedia('(min-width: 901px)').matches) setCaret(editor.querySelector('.ph-empty') || editor.lastElementChild, true);
+</script>
 </body>
 </html>
