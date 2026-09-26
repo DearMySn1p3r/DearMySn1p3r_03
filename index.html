@@ -388,7 +388,8 @@ svg{display:block}
 .pic.back{z-index:2}
 .pic.front{z-index:3}
 .pic.bd{border:1px solid var(--c-accent)}
-.editor .s-pic{margin:.55em 0 .9em;line-height:0;user-select:none}
+.editor .s-pic{margin:.4em 0 .7em;line-height:0;user-select:none}
+.editor .s-pic:first-child{margin-top:0}
 .editor .s-pic .pic{position:relative;display:block;margin:0 auto}
 .editor .s-pic.a-left .pic{margin-left:0}
 .editor .s-pic.a-right .pic{margin-right:0}
@@ -414,20 +415,20 @@ svg{display:block}
 .o-laurel .c-content{top:calc(var(--pad-y) + 22px)}
 .o-filigree .c-content{top:calc(var(--pad-y) + 4px);bottom:calc(var(--pad-y) + 4px)}
 
-.editor{outline:none;width:100%;font-size:calc(14.5px * var(--fs,1));font-family:var(--f-body);font-weight:var(--body-w,400);line-height:calc(1.9 * var(--lh,1));text-align:center;color:var(--c-text);word-break:keep-all;overflow-wrap:break-word;caret-color:var(--c-accent)}
+.editor{outline:none;width:100%;font-size:calc(14.5px * var(--fs,1));font-family:var(--f-body);font-weight:var(--body-w,400);line-height:calc(1.8 * var(--lh,1));text-align:center;color:var(--c-text);word-break:keep-all;overflow-wrap:break-word;caret-color:var(--c-accent)}
 .editing .editor{cursor:text}
 .editor ::selection{background:var(--c-sel)}
 .editor>div{min-height:1em}
-.editor .s-caps{font-family:var(--f-caps);font-size:.7em;font-weight:500;letter-spacing:.36em;text-transform:uppercase;color:var(--c-accent);line-height:2.2;margin-bottom:.6em;padding-left:.36em}
+.editor .s-caps{font-family:var(--f-caps);font-size:.7em;font-weight:500;letter-spacing:.36em;text-transform:uppercase;color:var(--c-accent);line-height:2;margin-bottom:.45em;padding-left:.36em}
 .editor .s-title{font-family:var(--f-title);font-size:calc(var(--t-size) * 1em);font-style:var(--t-style,normal);font-weight:var(--t-weight,400);letter-spacing:var(--t-ls,0);color:var(--c-title);line-height:1.3;margin-bottom:.3em}
 .editor .s-title.hangul{font-size:calc(var(--t-size-ko) * 1em)}
-.editor .s-date{display:table;margin:0 auto 1.35em;padding:0 .4em .9em;border-bottom:1px solid var(--c-line);font-family:var(--f-caps);font-size:.86em;letter-spacing:.15em;text-transform:uppercase;line-height:1.75;min-width:4em}
+.editor .s-date{display:table;margin:0 auto 1.05em;padding:0 .4em .7em;border-bottom:1px solid var(--c-line);font-family:var(--f-caps);font-size:.86em;letter-spacing:.15em;text-transform:uppercase;line-height:1.75;min-width:4em}
 .editor .s-date.a-left{margin-left:0}
 .editor .s-date.a-right{margin-right:0}
 .editor .s-body{font-size:.94em}
 .editor .s-quote{font-style:italic;font-size:.88em;color:var(--c-accent);letter-spacing:.02em;margin-top:1.2em}
-.editor .s-quote + .s-quote{margin-top:.8em}
-.editor .s-small{font-size:.78em;color:var(--c-muted);line-height:calc(1.9 * var(--lh,1))}
+.editor .s-quote + .s-quote{margin-top:.65em}
+.editor .s-small{font-size:.78em;color:var(--c-muted);line-height:calc(1.8 * var(--lh,1))}
 .editor .a-left{text-align:left}
 .editor .a-right{text-align:right}
 .editor .c-acc{color:var(--c-accent)}
@@ -570,6 +571,8 @@ svg{display:block}
         </div>
         <div class="rg"><span>글자 크기</span><input type="range" min="80" max="130" data-k="textScale"><b id="ts-val"></b></div>
         <div class="rg"><span>줄 간격</span><input type="range" min="80" max="140" data-k="lineH"><b id="lh-val"></b></div>
+        <label class="tog" style="margin-top:8px">꽉 채우기 <span class="sw"><input type="checkbox" data-k="fill"><i></i></span></label>
+        <p class="hint" style="margin-top:2px">카드 칸에 맞춰 글자를 가장 크게 키워요. 넘칠 땐 사진을 먼저 줄여요.</p>
       </div>
     </section>
 
@@ -593,6 +596,12 @@ svg{display:block}
             <div class="grid2">
               <button class="gbtn" id="pic-up">↑ 위로</button>
               <button class="gbtn" id="pic-down">↓ 아래로</button>
+            </div>
+            <div class="lb" style="margin-top:16px">위아래 위치 <em>Alt + ↑↓ 로도 옮겨요</em></div>
+            <div class="rg" style="margin-top:4px"><span>위치</span><input type="range" min="-160" max="160" step="1" data-p="dy"><b data-pv="dy"></b></div>
+            <div class="grid2" style="margin-top:10px">
+              <button class="gbtn" data-dy="-4">살짝 위로</button>
+              <button class="gbtn" data-dy="4">살짝 아래로</button>
             </div>
             <div class="seg mt">
               <button data-palign="left">왼쪽</button>
@@ -885,7 +894,7 @@ const EFFECTS = [
 
 const DEFAULTS = {
   html:null, watermark:'', calDate:'', theme:'blush', tFont:'pinyon', bFont:'notoserif', cFont:'cinzel', ornament:'baroque', ratio:'4:5', valign:'center',
-  textScale:100, lineH:100, grain:true, photos:[],
+  textScale:100, lineH:100, fill:true, grain:true, photos:[],
   fx:{ petal:true, heart:false, snow:false, twinkle:false, bokeh:false, shine:false }, fxAmount:'1', fxSpeed:'10080',
   fmt:'png', scale:3, gifSize:'640', ooc:null,
 };
@@ -932,7 +941,7 @@ function validate(s){
   const num = (v, d, lo, hi) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
   s.photos = (Array.isArray(s.photos) ? s.photos : []).filter(q => q && typeof q.src === 'string' && /^data:image\/[a-z+]+;base64,/.test(q.src)).map((q, i) => ({
     id: String(q.id || 'p' + i + Date.now().toString(36)), src:q.src, iw:num(q.iw, 1000, 1, 1e5), ih:num(q.ih, 1250, 1, 1e5),
-    x:num(q.x, .5, 0, 1), y:num(q.y, .32, 0, 1), w:num(q.w, .38, .08, 1), rot:num(q.rot, 0, -180, 180),
+    x:num(q.x, .5, 0, 1), y:num(q.y, .32, 0, 1), w:num(q.w, .38, .08, 1), rot:num(q.rot, 0, -180, 180), dy:num(q.dy, 0, -160, 160),
     shape:['arch','circle','rect','orig'].includes(q.shape) ? q.shape : 'arch', zoom:num(q.zoom, 1, 1, 3), px:num(q.px, 50, 0, 100), py:num(q.py, 50, 0, 100),
     op:num(q.op, 100, 15, 100), layer:q.layer === 'back' ? 'back' : 'front', bd:!!q.bd, mode:q.mode === 'flow' ? 'flow' : 'free',
     adj:{ tone:num(q.adj && q.adj.tone, 0, 0, 100), bri:num(q.adj && q.adj.bri, 0, -50, 50), con:num(q.adj && q.adj.con, 0, -50, 50), sat:num(q.adj && q.adj.sat, 0, -100, 60), warm:num(q.adj && q.adj.warm, 0, -50, 50), fade:num(q.adj && q.adj.fade, 0, 0, 60) },
@@ -1285,14 +1294,28 @@ function updateCap(){
     : picShrunk ? `카드에 맞추려고 사진을 ${Math.round(fitInfo.pf * 100)}%로 줄였어요` : '';
 }
 // 넘치면 사진을 먼저(최대 절반까지) 줄이고, 그래도 넘칠 때만 글자를 줄임
+// 카드 칸에 맞는 가장 큰 글자 크기를 찾음(꽉 채우기면 조금 키우기도 함).
+// 글자가 90% 아래로 줄어야 하면 사진을 먼저 줄여서 글씨를 지킴
 function fitEl(ed, box){
-  const base = state.textScale / 100;
-  let fs = base, pf = 1;
-  ed.style.setProperty('--fs', fs); ed.style.setProperty('--pf', pf);
-  const over = () => ed.scrollHeight > box.clientHeight + 1;
-  if (ed.querySelector('.s-pic')) for (let i = 0; i < 12 && over() && pf > .5; i++){ pf = +(pf - .05).toFixed(2); ed.style.setProperty('--pf', pf); }
-  for (let i = 0; i < 45 && over() && fs > base * .5; i++){ fs -= .02; ed.style.setProperty('--fs', fs.toFixed(3)); }
-  return { fs:fs / base, pf };
+  const base = state.textScale / 100, grow = state.fill ? 1.2 : 1, minFs = .5, good = .9;
+  const set = (fs, pf) => { ed.style.setProperty('--fs', (fs * base).toFixed(3)); ed.style.setProperty('--pf', pf.toFixed(2)); };
+  const fits = () => ed.scrollHeight <= box.clientHeight + 1;
+  const best = pf => {
+    set(grow, pf); if (fits()) return grow;
+    set(minFs, pf); if (!fits()) return minFs;
+    let lo = minFs, hi = grow;
+    for (let i = 0; i < 8; i++){ const mid = (lo + hi) / 2; set(mid, pf); if (fits()) lo = mid; else hi = mid; }
+    return lo;
+  };
+  let pf = 1, fs = best(1);
+  if (fs < good && ed.querySelector('.s-pic')){
+    let lo = .4, hi = 1;
+    set(good, lo);
+    if (fits()){ for (let i = 0; i < 6; i++){ const mid = (lo + hi) / 2; set(good, mid); if (fits()) lo = mid; else hi = mid; } pf = lo; fs = best(pf); }
+    else { pf = .4; fs = best(pf); }
+  }
+  set(fs, pf);
+  return { fs, pf };
 }
 let fitInfo = { fs:1, pf:1 };
 function refresh(){ fitInfo = fitEl(editor, content); updateCap(); }
@@ -1589,7 +1612,7 @@ photoInput.addEventListener('change', () => {
 
 function addPhoto(q, where){
   const n = state.photos.length;
-  const p = { id:'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), mode:'flow', x:.5, y:Math.min(.8, .3 + n * .06), w:.42, rot:0,
+  const p = { id:'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), mode:'flow', x:.5, y:Math.min(.8, .3 + n * .06), w:.42, rot:0, dy:0,
     shape:'arch', zoom:1, px:50, py:50, op:100, layer:'front', bd:false, ...q, adj:{ ...ADJ0, ...(q.adj || {}) } };
   state.photos.push(p);
   if (p.mode === 'flow'){
@@ -1713,7 +1736,7 @@ function renderPhotos(){
       el.innerHTML = '<div class="pic-img"></div><i class="hd hd-rs" data-h="rs"></i><i class="hd hd-rt" data-h="rt"></i>';
     }
     const flow = p.mode === 'flow';
-    if (flow){ const host = blocks.get(p.id); if (el.parentNode !== host) host.appendChild(el); }
+    if (flow){ const host = blocks.get(p.id); if (el.parentNode !== host) host.appendChild(el); host.style.marginTop = p.dy ? `calc(${host.previousElementSibling ? '.4em' : '0px'} + ${p.dy}px)` : ''; }
     else if (el.parentNode !== card) card.insertBefore(el, fcv);
     clampPic(p);
     let [w, h] = picBox(p, W);
@@ -1759,8 +1782,8 @@ function renderPhotos(){
     $$('[data-pmode]').forEach(b => b.classList.toggle('on', b.dataset.pmode === p.mode));
     const blk = picBlockOf(p.id), al = blk ? (blk.classList.contains('a-left') ? 'left' : blk.classList.contains('a-right') ? 'right' : 'center') : '';
     $$('[data-palign]').forEach(b => b.classList.toggle('on', b.dataset.palign === al));
-    const vals = { x:+(p.x * 100).toFixed(1), y:+(p.y * 100).toFixed(1), w:Math.round(p.w * 100), rot:Math.round(p.rot), zoom:Math.round(p.zoom * 100), px:Math.round(p.px), py:Math.round(p.py), op:Math.round(p.op) };
-    const unit = { x:'%', y:'%', w:'%', rot:'°', zoom:'%', px:'%', py:'%', op:'%' };
+    const vals = { x:+(p.x * 100).toFixed(1), y:+(p.y * 100).toFixed(1), w:Math.round(p.w * 100), rot:Math.round(p.rot), zoom:Math.round(p.zoom * 100), px:Math.round(p.px), py:Math.round(p.py), op:Math.round(p.op), dy:Math.round(p.dy || 0) };
+    const unit = { x:'%', y:'%', w:'%', rot:'°', zoom:'%', px:'%', py:'%', op:'%', dy:'px' };
     $$('[data-p]').forEach(i => { if (i !== document.activeElement) i.value = vals[i.dataset.p]; });
     $$('[data-pv]').forEach(b => b.textContent = vals[b.dataset.pv] + unit[b.dataset.pv]);
     $$('[data-a]').forEach(i => { if (i !== document.activeElement) i.value = p.adj[i.dataset.a]; });
@@ -1793,6 +1816,7 @@ $('[data-pbd]').addEventListener('change', e => withPic(p => p.bd = e.target.che
 $$('[data-step]').forEach(b => b.addEventListener('click', () => { nudgeStep = +b.dataset.step; renderPhotos(); }));
 $$('[data-pmode]').forEach(b => b.addEventListener('click', () => { const p = picById(selPic); if (p && p.mode !== b.dataset.pmode) setMode(p, b.dataset.pmode); }));
 $$('[data-palign]').forEach(b => b.addEventListener('click', () => alignPic(b.dataset.palign)));
+$$('[data-dy]').forEach(b => b.addEventListener('click', () => withPic(q => q.dy = clamp((q.dy || 0) + +b.dataset.dy, -160, 160))));
 $('#pic-up').addEventListener('click', () => movePic(-1));
 $('#pic-down').addEventListener('click', () => movePic(1));
 
@@ -1990,7 +2014,8 @@ document.addEventListener('keydown', e => {
   if (mv){
     e.preventDefault();
     if (p.mode === 'flow'){
-      if (mv[1]) movePic(mv[1]);
+      if (mv[1] && e.altKey) withPic(q => q.dy = clamp((q.dy || 0) + mv[1] * (e.shiftKey ? 10 : 2), -160, 160));
+      else if (mv[1]) movePic(mv[1]);
       else { const blk = picBlockOf(p.id), cur = blk.classList.contains('a-left') ? 0 : blk.classList.contains('a-right') ? 2 : 1; alignPic(['left', 'center', 'right'][clamp(cur + mv[0], 0, 2)]); }
     } else nudge(mv[0], mv[1], e.shiftKey ? 10 : 1);
   }
