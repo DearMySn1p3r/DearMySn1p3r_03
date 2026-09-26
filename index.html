@@ -288,7 +288,7 @@ svg{display:block}
   .canvas{padding:54px 16px 16px}
   .cap{display:none}
   .fitnote{bottom:8px;font-size:11px;white-space:normal;text-align:center}
-  .app.preview{grid-template-rows:52px 1fr 0 0}
+  .app.preview{grid-template-rows:48px 1fr 0 0}
   .pop{position:fixed;top:58px;right:10px}
 }
 
@@ -415,18 +415,18 @@ svg{display:block}
 .o-laurel .c-content{top:calc(var(--pad-y) + 22px)}
 .o-filigree .c-content{top:calc(var(--pad-y) + 4px);bottom:calc(var(--pad-y) + 4px)}
 
-.editor{outline:none;width:100%;font-size:calc(14.5px * var(--fs,1));font-family:var(--f-body);font-weight:var(--body-w,400);line-height:calc(1.8 * var(--lh,1));text-align:center;color:var(--c-text);word-break:keep-all;overflow-wrap:break-word;caret-color:var(--c-accent)}
+.editor{outline:none;width:100%;letter-spacing:var(--trk,0em);font-size:calc(14.5px * var(--fs,1));font-family:var(--f-body);font-weight:var(--body-w,400);line-height:calc(1.8 * var(--lh,1));text-align:center;color:var(--c-text);word-break:keep-all;overflow-wrap:break-word;caret-color:var(--c-accent)}
 .editing .editor{cursor:text}
 .editor ::selection{background:var(--c-sel)}
 .editor>div{min-height:1em}
-.editor .s-caps{font-family:var(--f-caps);font-size:.7em;font-weight:500;letter-spacing:.36em;text-transform:uppercase;color:var(--c-accent);line-height:2;margin-bottom:.45em;padding-left:.36em}
-.editor .s-title{font-family:var(--f-title);font-size:calc(var(--t-size) * 1em);font-style:var(--t-style,normal);font-weight:var(--t-weight,400);letter-spacing:var(--t-ls,0);color:var(--c-title);line-height:1.3;margin-bottom:.3em}
+.editor .s-caps{font-family:var(--f-caps);font-size:.7em;font-weight:500;letter-spacing:calc(.36em + var(--trk,0em));text-transform:uppercase;color:var(--c-accent);line-height:2;margin-bottom:.45em;padding-left:.36em}
+.editor .s-title{font-family:var(--f-title);font-size:calc(var(--t-size) * 1em);font-style:var(--t-style,normal);font-weight:var(--t-weight,400);letter-spacing:calc(var(--t-ls,0em) + var(--trk,0em));color:var(--c-title);line-height:1.3;margin-bottom:.3em}
 .editor .s-title.hangul{font-size:calc(var(--t-size-ko) * 1em)}
-.editor .s-date{display:table;margin:0 auto 1.05em;padding:0 .4em .7em;border-bottom:1px solid var(--c-line);font-family:var(--f-caps);font-size:.86em;letter-spacing:.15em;text-transform:uppercase;line-height:1.75;min-width:4em}
+.editor .s-date{display:table;margin:0 auto 1.05em;padding:0 .4em .7em;border-bottom:1px solid var(--c-line);font-family:var(--f-caps);font-size:.86em;letter-spacing:calc(.15em + var(--trk,0em));text-transform:uppercase;line-height:1.75;min-width:4em}
 .editor .s-date.a-left{margin-left:0}
 .editor .s-date.a-right{margin-right:0}
 .editor .s-body{font-size:.94em}
-.editor .s-quote{font-style:italic;font-size:.88em;color:var(--c-accent);letter-spacing:.02em;margin-top:1.2em}
+.editor .s-quote{font-style:italic;font-size:.88em;color:var(--c-accent);letter-spacing:calc(.02em + var(--trk,0em));margin-top:1.2em}
 .editor .s-quote + .s-quote{margin-top:.65em}
 .editor .s-small{font-size:.78em;color:var(--c-muted);line-height:calc(1.8 * var(--lh,1))}
 .editor .a-left{text-align:left}
@@ -571,6 +571,7 @@ svg{display:block}
         </div>
         <div class="rg"><span>글자 크기</span><input type="range" min="70" max="130" data-k="textScale"><b id="ts-val"></b></div>
         <div class="rg"><span>줄 간격</span><input type="range" min="80" max="140" data-k="lineH"><b id="lh-val"></b></div>
+        <div class="rg"><span>자간</span><input type="range" min="-10" max="10" step="1" data-k="tracking"><b id="trk-val"></b></div>
         <p class="hint" style="margin-top:8px">내용이 넘치면 사진을 먼저 줄이고, 그래도 넘칠 때만 글자를 줄여요.</p>
       </div>
     </section>
@@ -893,7 +894,7 @@ const EFFECTS = [
 
 const DEFAULTS = {
   html:null, watermark:'', calDate:'', theme:'blush', tFont:'pinyon', bFont:'notoserif', cFont:'cinzel', ornament:'baroque', ratio:'4:5', valign:'center',
-  textScale:88, lineH:100, grain:true, photos:[],
+  textScale:100, lineH:100, tracking:0, grain:true, photos:[],
   fx:{ petal:true, heart:false, snow:false, twinkle:false, bokeh:false, shine:false }, fxAmount:'1', fxSpeed:'10080',
   fmt:'png', scale:3, gifSize:'640', ooc:null,
 };
@@ -949,10 +950,13 @@ function validate(s){
   if (!['0.6','1','1.6'].includes(String(s.fxAmount))) s.fxAmount = DEFAULTS.fxAmount;
   if (!['14000','10080','7040'].includes(String(s.fxSpeed))) s.fxSpeed = DEFAULTS.fxSpeed;
   if (![1, 2, 3, 4].includes(+s.scale)) s.scale = DEFAULTS.scale; else s.scale = +s.scale;
+  s.tracking = Math.min(10, Math.max(-10, Math.round(+s.tracking || 0)));
+  s.textScale = Math.min(130, Math.max(70, Math.round(+s.textScale || 100)));
+  s.lineH = Math.min(140, Math.max(80, Math.round(+s.lineH || 100)));
   if (s.fmt === 'gif' && !Object.values(s.fx).some(Boolean)) s.fmt = 'png';
   return s;
 }
-if (state.tsv !== 2){ if (+state.textScale === 100) state.textScale = 88; state.tsv = 2; }
+if (state.tsv !== 3){ if (state.tsv === 2 && +state.textScale === 88) state.textScale = 100; state.tsv = 3; }
 validate(state);
 
 let saveTimer;
@@ -1241,7 +1245,7 @@ function render(){
   const vars = {
     '--c-card':t.card, '--c-glow':t.glow, '--c-text':t.text, '--c-muted':t.muted, '--c-title':t.title, '--c-accent':t.accent, '--c-line':t.line, '--c-sel':rgba(t.accent, .22),
     '--pad-x':px+'px', '--pad-y':py+'px', '--valign':state.valign, '--lh':state.lineH / 100,
-    '--f-title':`${tf.f}, ${bFam}`, '--t-size':tf.size, '--t-size-ko':tf.ko ? tf.size : +(tf.size * .58).toFixed(2), '--t-style':tf.style || 'normal', '--t-weight':tf.weight || 400, '--t-ls':tf.ls || '0',
+    '--f-title':`${tf.f}, ${bFam}`, '--t-size':tf.size, '--t-size-ko':tf.ko ? tf.size : +(tf.size * .58).toFixed(2), '--t-style':tf.style || 'normal', '--t-weight':tf.weight || 400, '--t-ls':tf.ls || '0em', '--trk':(state.tracking / 100) + 'em',
     '--f-caps':cf.f ? `${cf.f}, ${bFam}` : bFam, '--f-body':bFam, '--body-w':BF[state.bFont].w || 400,
   };
   for (const k in vars) card.style.setProperty(k, vars[k]);
@@ -1261,6 +1265,7 @@ function render(){
   $('#bf-name').textContent = BF[state.bFont].name;
   $('#ts-val').textContent = state.textScale + '%';
   $('#lh-val').textContent = state.lineH + '%';
+  $('#trk-val').textContent = (state.tracking > 0 ? '+' : '') + state.tracking;
   $$('#fx-list .fx').forEach(r => { const on = !!state.fx[r.dataset.fx]; r.classList.toggle('on', on); $('input', r).checked = on; });
 
   const gif = state.fmt === 'gif', gs = gifScale();
@@ -1278,7 +1283,7 @@ function render(){
   });
 
   renderCals();
-  renderPhotos();
+  renderPhotos(true);
   refresh();
   layoutStage();
 }
@@ -1304,18 +1309,32 @@ function fitEl(ed, box){
     set(grow, pf); if (fits()) return grow;
     set(minFs, pf); if (!fits()) return minFs;
     let lo = minFs, hi = grow;
-    for (let i = 0; i < 8; i++){ const mid = (lo + hi) / 2; set(mid, pf); if (fits()) lo = mid; else hi = mid; }
+    for (let i = 0; i < 7; i++){ const mid = (lo + hi) / 2; set(mid, pf); if (fits()) lo = mid; else hi = mid; }
     return lo;
   };
+  const hasPic = !!ed.querySelector('.s-pic');
+  // 빠른 길: 지난번 결과가 아직 딱 맞으면 그대로 사용 (타이핑할 때 가볍게)
+  const prev = ed._fit;
+  if (prev){
+    set(prev.fs, prev.pf);
+    if (fits()){
+      let ok = true;
+      if (prev.fs < grow){ set(Math.min(grow, prev.fs + .02), prev.pf); ok = !fits(); }
+      if (ok && hasPic && prev.pf < 1){ set(Math.max(prev.fs, good), Math.min(1, prev.pf + .04)); ok = !fits(); }
+      if (ok && hasPic && prev.fs < good - .001 && prev.pf > .401) ok = false;
+      if (ok){ set(prev.fs, prev.pf); return prev; }
+    }
+  }
   let pf = 1, fs = best(1);
-  if (fs < good && ed.querySelector('.s-pic')){
+  if (fs < good && hasPic){
     let lo = .4, hi = 1;
     set(good, lo);
     if (fits()){ for (let i = 0; i < 6; i++){ const mid = (lo + hi) / 2; set(good, mid); if (fits()) lo = mid; else hi = mid; } pf = lo; fs = best(pf); }
     else { pf = .4; fs = best(pf); }
   }
   set(fs, pf);
-  return { fs, pf };
+  ed._fit = { fs, pf };
+  return ed._fit;
 }
 let fitInfo = { fs:1, pf:1 };
 function refresh(){ fitInfo = fitEl(editor, content); updateCap(); }
@@ -1429,7 +1448,7 @@ function normalize(){
 
 function commit(){
   normalize();
-  renderPhotos();
+  renderPhotos(true);
   const snap = editor.cloneNode(true);
   snap.querySelectorAll('.s-pic').forEach(b => b.innerHTML = '');
   state.html = snap.innerHTML;
@@ -1717,7 +1736,7 @@ function applyAdj(d, a, th){
 const waitPhotoProcessing = () => Promise.all([...procPending.values()].map(j => j.promise));
 
 let thumbKey = '', lastPanelPic = null;
-function renderPhotos(){
+function renderPhotos(skipFit){
   const [W, H, padX] = dims();
   // 글에서 지워진 사진 정리 · 짝 없는 블록 정리
   const blocks = new Map([...editor.querySelectorAll(':scope > .s-pic')].map(b => [b.dataset.id, b]));
@@ -1796,7 +1815,7 @@ function renderPhotos(){
     $('#pic-crop').classList.toggle('on', cropId === p.id);
   }
   $$('[data-step]').forEach(b => b.classList.toggle('on', +b.dataset.step === nudgeStep));
-  if (editor.querySelector('.s-pic')) refresh();
+  if (!skipFit && editor.querySelector('.s-pic')) refresh();
 }
 
 // 패널 조절
@@ -2261,7 +2280,7 @@ projInput.addEventListener('change', async () => {
   } catch(e){ toast('불러올 수 없는 파일이에요'); }
 });
 $('#btn-reset').addEventListener('click', () => {
-  if (!confirm('쓴 내용을 지우고 처음 틀로 되돌릴까요?')) return;
+  if (!confirm('카드에 쓴 글과 넣은 사진을 모두 지우고 처음 틀로 되돌릴까요?')) return;
   editor.innerHTML = TEMPLATE; normalize(); commit(); render();
 });
 
