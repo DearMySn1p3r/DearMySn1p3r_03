@@ -569,10 +569,9 @@ svg{display:block}
           <button data-k="valign" data-v="center">가운데</button>
           <button data-k="valign" data-v="flex-end">아래</button>
         </div>
-        <div class="rg"><span>글자 크기</span><input type="range" min="80" max="130" data-k="textScale"><b id="ts-val"></b></div>
+        <div class="rg"><span>글자 크기</span><input type="range" min="70" max="130" data-k="textScale"><b id="ts-val"></b></div>
         <div class="rg"><span>줄 간격</span><input type="range" min="80" max="140" data-k="lineH"><b id="lh-val"></b></div>
-        <label class="tog" style="margin-top:8px">꽉 채우기 <span class="sw"><input type="checkbox" data-k="fill"><i></i></span></label>
-        <p class="hint" style="margin-top:2px">카드 칸에 맞춰 글자를 가장 크게 키워요. 넘칠 땐 사진을 먼저 줄여요.</p>
+        <p class="hint" style="margin-top:8px">내용이 넘치면 사진을 먼저 줄이고, 그래도 넘칠 때만 글자를 줄여요.</p>
       </div>
     </section>
 
@@ -894,7 +893,7 @@ const EFFECTS = [
 
 const DEFAULTS = {
   html:null, watermark:'', calDate:'', theme:'blush', tFont:'pinyon', bFont:'notoserif', cFont:'cinzel', ornament:'baroque', ratio:'4:5', valign:'center',
-  textScale:100, lineH:100, fill:true, grain:true, photos:[],
+  textScale:88, lineH:100, grain:true, photos:[],
   fx:{ petal:true, heart:false, snow:false, twinkle:false, bokeh:false, shine:false }, fxAmount:'1', fxSpeed:'10080',
   fmt:'png', scale:3, gifSize:'640', ooc:null,
 };
@@ -953,6 +952,7 @@ function validate(s){
   if (s.fmt === 'gif' && !Object.values(s.fx).some(Boolean)) s.fmt = 'png';
   return s;
 }
+if (state.tsv !== 2){ if (+state.textScale === 100) state.textScale = 88; state.tsv = 2; }
 validate(state);
 
 let saveTimer;
@@ -1297,7 +1297,7 @@ function updateCap(){
 // 카드 칸에 맞는 가장 큰 글자 크기를 찾음(꽉 채우기면 조금 키우기도 함).
 // 글자가 90% 아래로 줄어야 하면 사진을 먼저 줄여서 글씨를 지킴
 function fitEl(ed, box){
-  const base = state.textScale / 100, grow = state.fill ? 1.2 : 1, minFs = .5, good = .9;
+  const base = state.textScale / 100, grow = 1, minFs = .5, good = .9;
   const set = (fs, pf) => { ed.style.setProperty('--fs', (fs * base).toFixed(3)); ed.style.setProperty('--pf', pf.toFixed(2)); };
   const fits = () => ed.scrollHeight <= box.clientHeight + 1;
   const best = pf => {
